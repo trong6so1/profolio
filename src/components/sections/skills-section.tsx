@@ -31,8 +31,8 @@ export function SkillsSection() {
           eyebrow="Skills"
           title={
             <>
-              Tech stack mình sử dụng{" "}
-              <span className="text-gradient">hằng ngày</span>
+              Tech stack mình sử dụng
+              <span className="text-gradient"> hằng ngày</span>
             </>
           }
           description="Bộ công cụ được tinh chỉnh qua các dự án thực tế — từ xây dựng API cho đến vận hành production."

@@ -11,13 +11,20 @@ export function ThemeToggle() {
 
   React.useEffect(() => setMounted(true), []);
 
-  const isDark = resolvedTheme === "dark";
+  // Render a neutral label until mounted so SSR and first client render agree.
+  // This avoids the next-themes hydration mismatch on aria-label / title.
+  const isDark = mounted && resolvedTheme === "dark";
+  const label = mounted
+    ? isDark
+      ? "Bật chế độ sáng"
+      : "Bật chế độ tối"
+    : "Đổi chế độ sáng/tối";
 
   return (
     <button
       type="button"
-      aria-label={isDark ? "Bật chế độ sáng" : "Bật chế độ tối"}
-      title={isDark ? "Bật chế độ sáng" : "Bật chế độ tối"}
+      aria-label={label}
+      title={label}
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/60 text-foreground/80 backdrop-blur transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >

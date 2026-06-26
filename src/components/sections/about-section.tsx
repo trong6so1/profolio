@@ -66,8 +66,8 @@ export function AboutSection() {
           eyebrow="About Me"
           title={
             <>
-              Backend Engineer với tư duy{" "}
-              <span className="text-gradient">sản phẩm</span>
+              Backend Engineer với tư duy
+              <span className="text-gradient"> sản phẩm</span>
             </>
           }
           description="Mình xây dựng hệ thống backend ổn định, dễ mở rộng — tập trung vào kiến trúc sạch, vận hành tự động và giao tiếp rõ ràng."

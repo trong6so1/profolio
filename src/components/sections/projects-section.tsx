@@ -20,7 +20,7 @@ export function ProjectsSection() {
           eyebrow="Projects"
           title={
             <>
-              Dự án <span className="text-gradient">nổi bật</span>
+              Dự án<span className="text-gradient"> nổi bật</span>
             </>
           }
           description="Những sản phẩm mình đã xây dựng end-to-end — từ thiết kế database, viết API, batch job đến triển khai production."
