@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import {
   ArrowDown,
   Download,
@@ -15,6 +15,7 @@ import {
 import { profile, stats } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { useTilt } from "@/hooks/use-pointer";
+import { Magnetic } from "@/components/shared/magnetic";
 
 const container = {
   hidden: { opacity: 0 },
@@ -50,8 +51,11 @@ export function HeroSection() {
       id="hero"
       className="relative flex min-h-[100svh] items-center overflow-hidden pt-16"
     >
+      {/* Aurora background — soft moving gradients */}
+      <div className="aurora pointer-events-none absolute inset-0 -z-20 opacity-70" />
+
       {/* Background grid */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-60" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-50" />
 
       {/* Animated gradient blobs */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -90,22 +94,25 @@ export function HeroSection() {
 
             <motion.div variants={item} className="space-y-3">
               <p className="font-display text-sm font-medium uppercase tracking-[0.18em] text-primary">
+                <span className="inline-block h-px w-6 align-middle bg-primary/60" />{" "}
                 Xin chào, tôi là
               </p>
               <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                 {profile.name}
               </h1>
-              <div className="flex h-9 items-center overflow-hidden text-2xl font-semibold text-foreground sm:text-3xl">
-                <motion.span
-                  key={roleIdx}
-                  initial={{ y: 24, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -24, opacity: 0 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                  className="text-gradient inline-flex items-center"
-                >
-                  {profile.roles[roleIdx]}
-                </motion.span>
+              <div className="flex min-h-[2.5rem] items-center overflow-hidden text-2xl font-semibold sm:text-3xl">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={roleIdx}
+                    initial={{ y: 28, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -28, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="text-gradient inline-flex items-center"
+                  >
+                    {profile.roles[roleIdx]}
+                  </motion.span>
+                </AnimatePresence>
               </div>
             </motion.div>
 
@@ -117,70 +124,82 @@ export function HeroSection() {
             </motion.p>
 
             <motion.div variants={item} className="flex flex-wrap items-center gap-3">
-              <Button
-                asChild
-                size="lg"
-                className="shine-sweep group h-11 rounded-full bg-primary px-6 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/40 hover:brightness-105"
-              >
-                <Link href={profile.cvUrl} target="_blank" rel="noreferrer">
-                  <Download className="mr-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />
-                  Tải CV
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="group h-11 rounded-full border-border bg-background/60 px-6 backdrop-blur transition-all hover:border-primary/40 hover:bg-secondary hover:shadow-md"
-              >
-                <Link href="#contact">
-                  <Mail className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                  Liên hệ
-                </Link>
-              </Button>
+              <Magnetic strength={0.25} className="inline-block">
+                <Button
+                  asChild
+                  size="lg"
+                  className="shine-sweep group h-11 rounded-full bg-primary px-6 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/40 hover:brightness-105"
+                >
+                  <Link href={profile.cvUrl} target="_blank" rel="noreferrer">
+                    <Download className="mr-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+                    Tải CV
+                  </Link>
+                </Button>
+              </Magnetic>
+              <Magnetic strength={0.2} className="inline-block">
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="group h-11 rounded-full border-border bg-background/60 px-6 backdrop-blur transition-all hover:border-primary/40 hover:bg-secondary hover:shadow-md"
+                >
+                  <Link href="#contact">
+                    <Mail className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                    Liên hệ
+                  </Link>
+                </Button>
+              </Magnetic>
 
               <div className="ml-1 flex items-center gap-1.5">
-                <a
-                  href={profile.github}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="GitHub"
-                  className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/60 text-foreground/70 transition-all hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/10 hover:text-primary hover:shadow-lg hover:shadow-primary/20"
-                >
-                  <Github className="h-4.5 w-4.5 transition-transform group-hover:scale-110 group-hover:-rotate-6" />
-                </a>
-                <a
-                  href={profile.linkedin}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="LinkedIn"
-                  className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/60 text-foreground/70 transition-all hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/10 hover:text-primary hover:shadow-lg hover:shadow-primary/20"
-                >
-                  <Linkedin className="h-4.5 w-4.5 transition-transform group-hover:scale-110 group-hover:-rotate-6" />
-                </a>
+                <Magnetic strength={0.4}>
+                  <a
+                    href={profile.github}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="GitHub"
+                    className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/60 text-foreground/70 transition-all hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/10 hover:text-primary hover:shadow-lg hover:shadow-primary/20"
+                  >
+                    <Github className="h-4.5 w-4.5 transition-transform group-hover:scale-110 group-hover:-rotate-6" />
+                  </a>
+                </Magnetic>
+                <Magnetic strength={0.4}>
+                  <a
+                    href={profile.linkedin}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="LinkedIn"
+                    className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/60 text-foreground/70 transition-all hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/10 hover:text-primary hover:shadow-lg hover:shadow-primary/20"
+                  >
+                    <Linkedin className="h-4.5 w-4.5 transition-transform group-hover:scale-110 group-hover:-rotate-6" />
+                  </a>
+                </Magnetic>
               </div>
             </motion.div>
 
             {/* Stats */}
             <motion.div
               variants={item}
-              className="mt-4 grid w-full max-w-xl grid-cols-2 gap-3 sm:grid-cols-4"
+              className="mt-6 grid w-full max-w-xl grid-cols-2 gap-3 sm:grid-cols-4"
             >
               {stats.map((s, i) => (
                 <motion.div
                   key={s.label}
-                  whileHover={{ y: -3 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  className="spotlight-card group relative overflow-hidden rounded-2xl border border-border/60 bg-background/40 p-3.5 backdrop-blur transition-colors hover:border-primary/30"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + i * 0.08, duration: 0.5 }}
+                  whileHover={{ y: -4 }}
+                  className="spotlight-card lift-on-hover group relative overflow-hidden rounded-2xl border border-border/60 bg-background/50 p-4 backdrop-blur hover:border-primary/40 hover:shadow-depth"
                 >
                   <div className="relative z-10">
-                    <p className="font-display text-xl font-semibold text-foreground transition-colors group-hover:text-primary">
+                    <p className="number-ticker font-display text-2xl font-bold leading-none transition-transform group-hover:scale-105">
                       {s.value}
                     </p>
-                    <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
+                    <p className="mt-1.5 text-xs font-semibold text-foreground/80">
                       {s.label}
                     </p>
-                    <p className="text-[10px] text-muted-foreground/70">{s.hint}</p>
+                    <p className="mt-0.5 text-[10px] leading-tight text-muted-foreground">
+                      {s.hint}
+                    </p>
                   </div>
                   <span
                     className="absolute inset-x-0 bottom-0 h-px gradient-bar opacity-0 transition-opacity group-hover:opacity-100"
@@ -193,7 +212,9 @@ export function HeroSection() {
 
           {/* Right: avatar / portrait card */}
           <motion.div variants={item} className="relative mx-auto w-full max-w-sm">
-            <AvatarCard />
+            <div className="bob">
+              <AvatarCard />
+            </div>
           </motion.div>
         </motion.div>
 
@@ -305,16 +326,16 @@ function AvatarCard() {
 
           {/* Bottom badge */}
           <div
-            className="glass-strong absolute inset-x-3 bottom-3 flex items-center justify-between rounded-2xl px-4 py-3 sm:inset-x-5 sm:bottom-5"
+            className="glass-strong absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-2xl px-4 py-3 sm:inset-x-5 sm:bottom-5"
             style={{ transform: "translateZ(30px)" }}
           >
-            <div>
-              <p className="font-display text-sm font-semibold text-foreground">
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-display text-sm font-semibold text-foreground">
                 {profile.name}
               </p>
-              <p className="text-[11px] text-muted-foreground">{profile.role}</p>
+              <p className="truncate text-[11px] text-muted-foreground">{profile.role}</p>
             </div>
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-[10px] font-medium text-primary">
+            <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-primary/15 px-2.5 py-1 text-[10px] font-medium text-primary">
               <Sparkles className="h-3 w-3" />
               Open to work
             </span>

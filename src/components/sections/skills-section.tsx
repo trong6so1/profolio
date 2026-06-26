@@ -53,45 +53,52 @@ export function SkillsSection() {
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
-                <Card className="spotlight-card border-conic group h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
+                <Card className="spotlight-card border-conic lift-on-hover group h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur hover:border-primary/40 hover:shadow-depth">
                   <CardContent className="relative z-10 p-5">
-                    <div className="flex items-center gap-3">
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
-                        <Icon className="h-5 w-5" />
+                    <div className="flex items-center justify-between gap-3 border-b border-border/60 pb-4">
+                      <div className="flex items-center gap-3">
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <h3 className="font-display text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+                          {group.category}
+                        </h3>
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground/70">
+                        {group.skills.length} skills
                       </span>
-                      <h3 className="font-display text-base font-semibold text-foreground transition-colors group-hover:text-primary">
-                        {group.category}
-                      </h3>
                     </div>
 
                     <ul className="mt-5 space-y-4">
-                      {group.skills.map((skill) => (
+                      {group.skills.map((skill, si) => (
                         <li key={skill.name}>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="font-medium text-foreground">
+                          <div className="flex items-baseline justify-between gap-2">
+                            <span className="text-sm font-semibold text-foreground">
                               {skill.name}
                             </span>
-                            <span className="text-xs text-muted-foreground">
+                            <span className="font-mono text-xs font-medium text-primary">
                               {skill.level}%
                             </span>
                           </div>
                           {skill.note && (
-                            <p className="mt-0.5 text-[11px] text-muted-foreground/70">
+                            <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground">
                               {skill.note}
                             </p>
                           )}
-                          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary/80">
                             <motion.div
                               initial={{ width: 0 }}
                               whileInView={{ width: `${skill.level}%` }}
                               viewport={{ once: true, margin: "-40px" }}
                               transition={{
-                                duration: 0.9,
-                                delay: 0.2,
+                                duration: 1,
+                                delay: 0.2 + si * 0.1,
                                 ease: [0.22, 1, 0.36, 1],
                               }}
-                              className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-400"
-                            />
+                              className="relative h-full rounded-full bg-gradient-to-r from-primary to-emerald-400"
+                            >
+                              <span className="absolute inset-y-0 right-0 w-1.5 rounded-full bg-white/60 blur-[1px]" />
+                            </motion.div>
                           </div>
                         </li>
                       ))}

@@ -76,7 +76,7 @@ function FeaturedProjectCard({
       <Card
         onPointerMove={tilt.onMove}
         onPointerLeave={tilt.onLeave}
-        className="tilt-3d spotlight-card border-conic h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
+        className="tilt-3d spotlight-card border-conic h-full gap-0 overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
         style={{ transform: "perspective(1000px)" }}
       >
         {/* Cover */}

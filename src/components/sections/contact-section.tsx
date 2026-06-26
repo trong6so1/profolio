@@ -386,14 +386,14 @@ function GlowInput({
       <Input
         {...props}
         className={cn(
-          "relative z-10 transition-all duration-200",
+          "relative z-10 h-11 transition-all duration-200",
           "focus-visible:ring-0 focus-visible:ring-offset-0",
           className,
         )}
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-md opacity-0 ring-2 ring-primary/50 ring-offset-0 transition-opacity duration-200 group-focus-within/input:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-md opacity-0 ring-2 ring-primary/50 transition-opacity duration-200 group-focus-within/input:opacity-100"
       />
       <span
         aria-hidden

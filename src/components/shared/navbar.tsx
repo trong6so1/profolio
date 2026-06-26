@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { navLinks, profile } from "@/lib/data";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { Magnetic } from "@/components/shared/magnetic";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -97,16 +98,18 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button
-            asChild
-            size="sm"
-            className="shine-sweep hidden h-9 rounded-full bg-primary px-4 text-primary-foreground shadow-md shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 sm:inline-flex"
-          >
-            <Link href="#contact">
-              Liên hệ
-              <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
-          </Button>
+          <Magnetic strength={0.25} className="hidden sm:inline-block">
+            <Button
+              asChild
+              size="sm"
+              className="shine-sweep h-9 rounded-full bg-primary px-4 text-primary-foreground shadow-md shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30"
+            >
+              <Link href="#contact">
+                Liên hệ
+                <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </Button>
+          </Magnetic>
 
           {/* Mobile menu button */}
           <button

@@ -163,27 +163,34 @@ export function AboutSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-3"
+            className="space-y-5"
           >
-            <h3 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              <Heart className="h-4 w-4 text-primary" />
+            <h3 className="flex items-center gap-2 font-display text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              <Heart className="h-3.5 w-3.5 text-primary" />
               Điểm mạnh
             </h3>
             <div className="grid gap-3">
-              {strengths.map((s) => {
+              {strengths.map((s, i) => {
                 const Icon = s.icon;
                 return (
                   <motion.div
                     key={s.title}
+                    initial={{ opacity: 0, x: 16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{
+                      duration: 0.5,
+                      delay: i * 0.08,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                     whileHover={{ y: -3 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                    className="spotlight-card border-conic group relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur transition-colors hover:border-primary/40"
+                    className="spotlight-card border-conic lift-on-hover group relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur hover:border-primary/40 hover:shadow-depth"
                   >
                     <div className="relative z-10 flex items-start gap-3">
-                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
                         <Icon className="h-4 w-4" />
                       </span>
-                      <div>
+                      <div className="min-w-0 flex-1 pt-0.5">
                         <h4 className="font-display text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
                           {s.title}
                         </h4>
@@ -199,21 +206,31 @@ export function AboutSection() {
 
             {/* Direction */}
             <div className="grid gap-3 pt-2">
-              <h3 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                <Target className="h-4 w-4 text-primary" />
+              <h3 className="flex items-center gap-2 font-display text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                <Target className="h-3.5 w-3.5 text-primary" />
                 Định hướng nghề nghiệp
               </h3>
-              {directions.map((d) => {
+              {directions.map((d, i) => {
                 const Icon = d.icon;
                 return (
-                  <div
+                  <motion.div
                     key={d.title}
-                    className="rounded-2xl border border-border/60 bg-gradient-to-br from-primary/5 to-transparent p-4"
+                    initial={{ opacity: 0, x: 16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{
+                      duration: 0.5,
+                      delay: i * 0.08,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="spotlight-card group relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/5 via-background/40 to-transparent p-4 transition-colors hover:border-primary/40"
                   >
-                    <div className="flex items-start gap-3">
-                      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                      <div>
-                        <h4 className="font-display text-sm font-semibold text-foreground">
+                    <div className="relative z-10 flex items-start gap-3">
+                      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+                        <Icon className="h-3.5 w-3.5" />
+                      </span>
+                      <div className="min-w-0 flex-1 pt-0.5">
+                        <h4 className="font-display text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
                           {d.title}
                         </h4>
                         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -221,7 +238,7 @@ export function AboutSection() {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
