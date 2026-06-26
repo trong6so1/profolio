@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   MapPin,
@@ -12,6 +12,7 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  Sparkles,
 } from "lucide-react";
 import { profile } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -20,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 type Status =
   | { kind: "idle" }
@@ -133,8 +135,9 @@ export function ContactSection() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-4"
           >
-            <Card className="overflow-hidden border-border/60 bg-card/60 backdrop-blur">
-              <CardContent className="p-6">
+            <Card className="spotlight-card relative overflow-hidden border-border/60 bg-card/60 backdrop-blur">
+              <span className="absolute inset-x-0 top-0 h-px gradient-bar opacity-60" />
+              <CardContent className="relative z-10 p-6">
                 <h3 className="font-display text-lg font-semibold text-foreground">
                   Thông tin liên hệ
                 </h3>
@@ -151,10 +154,10 @@ export function ContactSection() {
                           href={c.href}
                           target={c.href.startsWith("http") ? "_blank" : undefined}
                           rel="noreferrer noopener"
-                          className="group flex items-center gap-3 rounded-xl border border-border/60 bg-background/40 p-3 transition-colors hover:border-primary/40"
+                          className="group flex items-center gap-3 rounded-xl border border-border/60 bg-background/40 p-3 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10"
                         >
                           <span
-                            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${c.accent}`}
+                            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${c.accent} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}
                           >
                             <Icon className="h-4.5 w-4.5" />
                           </span>
@@ -162,7 +165,7 @@ export function ContactSection() {
                             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                               {c.label}
                             </p>
-                            <p className="truncate text-sm font-medium text-foreground">
+                            <p className="truncate text-sm font-medium text-foreground transition-colors group-hover:text-primary">
                               {c.value}
                             </p>
                           </div>
@@ -187,9 +190,9 @@ export function ContactSection() {
                           target="_blank"
                           rel="noreferrer noopener"
                           aria-label={s.label}
-                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/60 text-foreground/70 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary"
+                          className="group inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/60 text-foreground/70 transition-all hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/10 hover:text-primary hover:shadow-lg hover:shadow-primary/20"
                         >
-                          <Icon className="h-4.5 w-4.5" />
+                          <Icon className="h-4.5 w-4.5 transition-transform group-hover:scale-110" />
                         </a>
                       );
                     })}
@@ -199,8 +202,12 @@ export function ContactSection() {
             </Card>
 
             {/* Availability badge */}
-            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5">
-              <div className="flex items-center gap-3">
+            <div className="spotlight-card relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5 transition-colors hover:border-emerald-500/50">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-500/20 blur-3xl"
+              />
+              <div className="relative z-10 flex items-center gap-3">
                 <span className="relative flex h-3 w-3">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
@@ -208,8 +215,9 @@ export function ContactSection() {
                 <p className="text-sm font-medium text-foreground">
                   Sẵn sàng cho cơ hội mới
                 </p>
+                <Sparkles className="ml-auto h-4 w-4 text-emerald-500" />
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <p className="relative z-10 mt-2 text-sm text-muted-foreground">
                 Mình đang mở cho các vị trí Backend Developer (Laravel / Node.js) —
                 onsite tại Đồng Nai / TP.HCM hoặc remote toàn quốc.
               </p>
@@ -223,12 +231,13 @@ export function ContactSection() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Card className="border-border/60 bg-card/60 backdrop-blur">
-              <CardContent className="p-6 sm:p-8">
+            <Card className="spotlight-card border-conic relative overflow-hidden border-border/60 bg-card/60 backdrop-blur">
+              <span className="absolute inset-x-0 top-0 h-px gradient-bar opacity-60" />
+              <CardContent className="relative z-10 p-6 sm:p-8">
                 <form onSubmit={onSubmit} className="space-y-5" noValidate>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Họ và tên" htmlFor="name">
-                      <Input
+                      <GlowInput
                         id="name"
                         name="name"
                         autoComplete="name"
@@ -238,7 +247,7 @@ export function ContactSection() {
                       />
                     </Field>
                     <Field label="Email" htmlFor="email">
-                      <Input
+                      <GlowInput
                         id="email"
                         name="email"
                         type="email"
@@ -251,7 +260,7 @@ export function ContactSection() {
                   </div>
 
                   <Field label="Chủ đề" htmlFor="subject">
-                    <Input
+                    <GlowInput
                       id="subject"
                       name="subject"
                       placeholder="Cơ hội hợp tác / Tuyển dụng / Trao đổi kỹ thuật"
@@ -261,7 +270,7 @@ export function ContactSection() {
                   </Field>
 
                   <Field label="Nội dung" htmlFor="message">
-                    <Textarea
+                    <GlowTextarea
                       id="message"
                       name="message"
                       rows={6}
@@ -273,24 +282,42 @@ export function ContactSection() {
                   </Field>
 
                   {/* Status messages */}
-                  {status.kind === "success" && (
-                    <div
-                      role="status"
-                      className="flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-sm text-emerald-700 dark:text-emerald-300"
-                    >
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
-                      <span>{status.message}</span>
-                    </div>
-                  )}
-                  {status.kind === "error" && (
-                    <div
-                      role="alert"
-                      className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive"
-                    >
-                      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                      <span>{status.message}</span>
-                    </div>
-                  )}
+                  <AnimatePresence mode="wait">
+                    {status.kind === "success" && (
+                      <motion.div
+                        key="success"
+                        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        role="status"
+                        className="flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-sm text-emerald-700 dark:text-emerald-300"
+                      >
+                        <motion.span
+                          initial={{ scale: 0, rotate: -30 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ delay: 0.1, type: "spring", stiffness: 300, damping: 18 }}
+                        >
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                        </motion.span>
+                        <span>{status.message}</span>
+                      </motion.div>
+                    )}
+                    {status.kind === "error" && (
+                      <motion.div
+                        key="error"
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.25 }}
+                        role="alert"
+                        className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive"
+                      >
+                        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                        <span>{status.message}</span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                     <p className="text-xs text-muted-foreground">
@@ -299,7 +326,7 @@ export function ContactSection() {
                     <Button
                       type="submit"
                       disabled={status.kind === "loading"}
-                      className="h-11 rounded-full bg-primary px-6 text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 disabled:opacity-60"
+                      className="shine-sweep group h-11 rounded-full bg-primary px-6 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/40 hover:brightness-105 disabled:opacity-60"
                     >
                       {status.kind === "loading" ? (
                         <>
@@ -308,7 +335,7 @@ export function ContactSection() {
                         </>
                       ) : (
                         <>
-                          <Send className="mr-2 h-4 w-4" />
+                          <Send className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                           Gửi tin nhắn
                         </>
                       )}
@@ -342,6 +369,62 @@ function Field({
         {label}
       </Label>
       {children}
+    </div>
+  );
+}
+
+/**
+ * Input wrapper with a glowing focus ring (gradient border) that animates
+ * in/out on focus.
+ */
+function GlowInput({
+  className,
+  ...props
+}: React.ComponentProps<typeof Input>) {
+  return (
+    <div className="group/input relative">
+      <Input
+        {...props}
+        className={cn(
+          "relative z-10 transition-all duration-200",
+          "focus-visible:ring-0 focus-visible:ring-offset-0",
+          className,
+        )}
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-md opacity-0 ring-2 ring-primary/50 ring-offset-0 transition-opacity duration-200 group-focus-within/input:opacity-100"
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -inset-0.5 -z-10 rounded-lg bg-gradient-to-r from-primary/30 via-emerald-400/30 to-amber-300/30 opacity-0 blur-md transition-opacity duration-300 group-focus-within/input:opacity-100"
+      />
+    </div>
+  );
+}
+
+function GlowTextarea({
+  className,
+  ...props
+}: React.ComponentProps<typeof Textarea>) {
+  return (
+    <div className="group/input relative">
+      <Textarea
+        {...props}
+        className={cn(
+          "relative z-10 transition-all duration-200",
+          "focus-visible:ring-0 focus-visible:ring-offset-0",
+          className,
+        )}
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-md opacity-0 ring-2 ring-primary/50 transition-opacity duration-200 group-focus-within/input:opacity-100"
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -inset-0.5 -z-10 rounded-lg bg-gradient-to-r from-primary/30 via-emerald-400/30 to-amber-300/30 opacity-0 blur-md transition-opacity duration-300 group-focus-within/input:opacity-100"
+      />
     </div>
   );
 }

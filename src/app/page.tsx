@@ -1,6 +1,9 @@
 import { Navbar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
 import { StructuredData } from "@/components/shared/structured-data";
+import { ScrollProgress } from "@/components/shared/scroll-progress";
+import { ScrollToTop } from "@/components/shared/scroll-to-top";
+import { MouseSpotlight } from "@/components/shared/mouse-spotlight";
 import { HeroSection } from "@/components/sections/hero-section";
 import { AboutSection } from "@/components/sections/about-section";
 import { SkillsSection } from "@/components/sections/skills-section";
@@ -12,7 +15,10 @@ export default function Home() {
   return (
     <>
       <StructuredData />
-      <div className="flex min-h-screen flex-col">
+      <ScrollProgress />
+      <MouseSpotlight />
+      <ScrollToTop />
+      <div className="relative flex min-h-screen flex-col">
         <Navbar />
         <main className="flex-1">
           <HeroSection />

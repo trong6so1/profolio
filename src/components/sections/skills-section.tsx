@@ -53,13 +53,13 @@ export function SkillsSection() {
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
-                <Card className="group h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-colors hover:border-primary/40">
-                  <CardContent className="p-5">
+                <Card className="spotlight-card border-conic group h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
+                  <CardContent className="relative z-10 p-5">
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
                         <Icon className="h-5 w-5" />
                       </span>
-                      <h3 className="font-display text-base font-semibold text-foreground">
+                      <h3 className="font-display text-base font-semibold text-foreground transition-colors group-hover:text-primary">
                         {group.category}
                       </h3>
                     </div>
@@ -103,39 +103,64 @@ export function SkillsSection() {
           })}
         </div>
 
-        {/* Tech tags strip */}
+        {/* Marquee tech tags strip */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/60 p-5 backdrop-blur"
+          className="relative mt-8 overflow-hidden rounded-2xl border border-border/60 bg-background/60 py-5 backdrop-blur"
         >
-          <span className="mr-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Cũng quen thuộc:
-          </span>
-          {[
-            "PHP",
-            "JavaScript",
-            "Vue.js",
-            "jQuery",
-            "Bash",
-            "CentOS",
-            "MariaDB",
-            "REST API",
-            "JSON",
-            "TSV",
-            "Git",
-            "Google API",
-            "MoMo API",
-          ].map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center rounded-full border border-border/60 bg-secondary/60 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-            >
-              {tag}
+          {/* edge fade masks */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
+
+          <div className="flex items-center gap-3">
+            <span className="z-20 ml-5 hidden shrink-0 text-xs font-medium uppercase tracking-wider text-muted-foreground sm:inline-block">
+              Cũng quen thuộc:
             </span>
-          ))}
+            <div className="marquee-track gap-2">
+              {[
+                "PHP",
+                "JavaScript",
+                "Vue.js",
+                "jQuery",
+                "Bash",
+                "CentOS",
+                "MariaDB",
+                "REST API",
+                "JSON",
+                "TSV",
+                "Git",
+                "Google API",
+                "MoMo API",
+              ]
+                .concat([
+                  "PHP",
+                  "JavaScript",
+                  "Vue.js",
+                  "jQuery",
+                  "Bash",
+                  "CentOS",
+                  "MariaDB",
+                  "REST API",
+                  "JSON",
+                  "TSV",
+                  "Git",
+                  "Google API",
+                  "MoMo API",
+                ])
+                .map((tag, i) => (
+                  <span
+                    key={`${tag}-${i}`}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-secondary/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    {tag}
+                  </span>
+                ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

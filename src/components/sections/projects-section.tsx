@@ -7,6 +7,7 @@ import { projects, type Project } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTilt } from "@/hooks/use-pointer";
 import { cn } from "@/lib/utils";
 
 export function ProjectsSection() {
@@ -58,6 +59,8 @@ function FeaturedProjectCard({
   project: Project;
   index: number;
 }) {
+  const tilt = useTilt<HTMLDivElement>(6);
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 30 }}
@@ -70,17 +73,24 @@ function FeaturedProjectCard({
       }}
       className="group relative"
     >
-      <Card className="h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
+      <Card
+        onPointerMove={tilt.onMove}
+        onPointerLeave={tilt.onLeave}
+        className="tilt-3d spotlight-card border-conic h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
+        style={{ transform: "perspective(1000px)" }}
+      >
         {/* Cover */}
         <div className="relative aspect-[16/9] overflow-hidden">
           <div
             className={cn(
-              "absolute inset-0 bg-gradient-to-br",
+              "absolute inset-0 bg-gradient-to-br transition-transform duration-700 group-hover:scale-105",
               project.gradient,
             )}
           />
           <div className="absolute inset-0 bg-dots opacity-20" />
           <div className="absolute inset-0 bg-grid opacity-30" />
+          {/* shine sweep on hover */}
+          <div className="shine-sweep absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />
 
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.span
@@ -88,7 +98,8 @@ function FeaturedProjectCard({
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 + index * 0.1 }}
-              className="text-6xl drop-shadow-lg"
+              className="text-6xl drop-shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6"
+              style={{ transform: "translateZ(40px)" }}
             >
               {project.emoji}
             </motion.span>
@@ -109,7 +120,7 @@ function FeaturedProjectCard({
           </div>
 
           {/* Hover overlay links */}
-          <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background/40 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background/40 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
             {project.github && (
               <a
                 href={project.github}
@@ -135,9 +146,9 @@ function FeaturedProjectCard({
           </div>
         </div>
 
-        <CardContent className="flex flex-col gap-4 p-6">
+        <CardContent className="relative z-10 flex flex-col gap-4 p-6">
           <div>
-            <h3 className="font-display text-lg font-semibold text-foreground">
+            <h3 className="font-display text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
               {project.title}
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">{project.subtitle}</p>
@@ -166,7 +177,7 @@ function FeaturedProjectCard({
               <Badge
                 key={t}
                 variant="secondary"
-                className="bg-secondary/80 text-xs font-medium text-muted-foreground"
+                className="bg-secondary/80 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
               >
                 {t}
               </Badge>
@@ -180,9 +191,9 @@ function FeaturedProjectCard({
                   href={project.github}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary"
+                  className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary"
                 >
-                  <Github className="h-4 w-4" />
+                  <Github className="h-4 w-4 transition-transform group-hover/link:scale-110" />
                   Code
                 </a>
               )}
@@ -191,9 +202,9 @@ function FeaturedProjectCard({
                   href={project.demo}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary"
+                  className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary"
                 >
-                  <ExternalLink className="h-4 w-4" />
+                  <ExternalLink className="h-4 w-4 transition-transform group-hover/link:scale-110" />
                   Demo
                 </a>
               )}
@@ -223,20 +234,20 @@ function CompactProjectCard({
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <Card className="group h-full border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
-        <CardContent className="flex h-full flex-col gap-3 p-5">
+      <Card className="spotlight-card border-conic group relative h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
+        <CardContent className="relative z-10 flex h-full flex-col gap-3 p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <span
                 className={cn(
-                  "inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br text-xl",
+                  "inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br text-xl transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6",
                   project.gradient,
                 )}
               >
                 {project.emoji}
               </span>
               <div>
-                <h4 className="font-display text-sm font-semibold text-foreground">
+                <h4 className="font-display text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
                   {project.title}
                 </h4>
                 <p className="text-xs text-muted-foreground">{project.year}</p>
@@ -254,7 +265,7 @@ function CompactProjectCard({
               <Badge
                 key={t}
                 variant="secondary"
-                className="bg-secondary/70 text-[10px] font-medium text-muted-foreground"
+                className="bg-secondary/70 text-[10px] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
               >
                 {t}
               </Badge>

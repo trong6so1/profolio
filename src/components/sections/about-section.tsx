@@ -106,10 +106,10 @@ export function AboutSection() {
             </div>
 
             {/* Education card */}
-            <Card className="border-border/60 bg-card/60 backdrop-blur">
-              <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <Card className="spotlight-card border-conic group border-border/60 bg-card/60 backdrop-blur transition-colors hover:border-primary/40">
+              <CardContent className="relative z-10 flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
                 <div className="flex items-start gap-4">
-                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform group-hover:scale-110">
                     <GraduationCap className="h-5 w-5" />
                   </span>
                   <div>
@@ -122,8 +122,8 @@ export function AboutSection() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-xl bg-secondary/60 px-4 py-3 sm:flex-col sm:items-end sm:gap-0.5">
-                  <span className="font-display text-2xl font-semibold text-foreground">
+                <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-secondary/60 px-4 py-3 sm:flex-col sm:items-end sm:gap-0.5">
+                  <span className="font-display text-2xl font-semibold text-gradient">
                     {education.gpa}
                   </span>
                   <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -135,16 +135,24 @@ export function AboutSection() {
 
             {/* Mini stats */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {stats.map((s) => (
-                <div
+              {stats.map((s, i) => (
+                <motion.div
                   key={s.label}
-                  className="rounded-2xl border border-border/60 bg-background/40 p-4"
+                  whileHover={{ y: -3 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                  className="spotlight-card group relative overflow-hidden rounded-2xl border border-border/60 bg-background/40 p-4 transition-colors hover:border-primary/30"
                 >
-                  <p className="font-display text-xl font-semibold text-foreground">
-                    {s.value}
-                  </p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{s.label}</p>
-                </div>
+                  <div className="relative z-10">
+                    <p className="font-display text-xl font-semibold text-foreground transition-colors group-hover:text-primary">
+                      {s.value}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{s.label}</p>
+                  </div>
+                  <span
+                    className="absolute inset-x-0 bottom-0 h-px gradient-bar opacity-0 transition-opacity group-hover:opacity-100"
+                    style={{ animationDelay: `${i * -1}s` }}
+                  />
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -167,16 +175,16 @@ export function AboutSection() {
                 return (
                   <motion.div
                     key={s.title}
-                    whileHover={{ y: -2 }}
+                    whileHover={{ y: -3 }}
                     transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                    className="group rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur transition-colors hover:border-primary/40"
+                    className="spotlight-card border-conic group relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur transition-colors hover:border-primary/40"
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-transform group-hover:scale-110">
+                    <div className="relative z-10 flex items-start gap-3">
+                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                         <Icon className="h-4 w-4" />
                       </span>
                       <div>
-                        <h4 className="font-display text-sm font-semibold text-foreground">
+                        <h4 className="font-display text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
                           {s.title}
                         </h4>
                         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">

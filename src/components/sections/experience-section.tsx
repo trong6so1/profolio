@@ -88,7 +88,9 @@ function TimelineItem({ exp, index }: { exp: Exp; index: number }) {
           isLeft ? "md:pr-12 md:text-right" : "md:col-start-2 md:pl-12",
         )}
       >
-        <div className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/70 p-5 backdrop-blur transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 sm:p-6">
+        <div className="spotlight-card border-conic group relative overflow-hidden rounded-2xl border border-border/60 bg-card/70 p-5 backdrop-blur transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 sm:p-6">
+          {/* Top accent gradient line */}
+          <span className="absolute inset-x-0 top-0 h-px gradient-bar opacity-0 transition-opacity group-hover:opacity-100" />
           {/* Header */}
           <div
             className={cn(

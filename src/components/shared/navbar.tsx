@@ -52,7 +52,7 @@ export function Navbar() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled
-          ? "border-b border-border/60 bg-background/70 backdrop-blur-xl"
+          ? "border-b border-border/60 bg-background/70 backdrop-blur-xl shadow-sm shadow-foreground/5"
           : "border-b border-transparent bg-transparent",
       )}
     >
@@ -62,11 +62,12 @@ export function Navbar() {
           className="group flex items-center gap-2.5 text-foreground"
           aria-label={`${profile.name} — Home`}
         >
-          <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 font-display text-sm font-bold text-white shadow-lg shadow-emerald-500/25">
+          <span className="relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 font-display text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+            <span className="shine-sweep absolute inset-0" />
             ĐT
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-background" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-background transition-transform duration-300 group-hover:scale-125" />
           </span>
-          <span className="hidden font-display text-sm font-semibold tracking-tight sm:block">
+          <span className="hidden font-display text-sm font-semibold tracking-tight transition-colors group-hover:text-primary sm:block">
             {profile.name}
           </span>
         </Link>
@@ -85,7 +86,7 @@ export function Navbar() {
               {active === link.href && (
                 <motion.span
                   layoutId="nav-active"
-                  className="absolute inset-0 -z-10 rounded-full bg-secondary"
+                  className="absolute inset-0 -z-10 rounded-full border border-border/60 bg-secondary/80 shadow-sm"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
@@ -99,11 +100,11 @@ export function Navbar() {
           <Button
             asChild
             size="sm"
-            className="hidden h-9 rounded-full bg-primary px-4 text-primary-foreground shadow-sm hover:bg-primary/90 sm:inline-flex"
+            className="shine-sweep hidden h-9 rounded-full bg-primary px-4 text-primary-foreground shadow-md shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 sm:inline-flex"
           >
             <Link href="#contact">
               Liên hệ
-              <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" />
+              <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </Button>
 
