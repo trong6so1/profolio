@@ -1,0 +1,246 @@
+/**
+ * Central data file for the portfolio.
+ * All profile / skills / projects / experience content lives here so the
+ * page sections stay declarative and easy to maintain.
+ */
+
+export const profile = {
+  name: "Đinh Hiếu Trọng",
+  nameEn: "Dinh Hieu Trong",
+  role: "Software Engineer",
+  roles: ["Software Engineer", "Backend Developer", "PHP / Laravel Specialist"],
+  tagline:
+    "Xây dựng hệ thống backend ổn định, dễ mở rộng và có thể bảo trì — bằng Laravel, Node.js và tư duy kiến trúc sạch.",
+  shortBio:
+    "Backend Developer với hơn 1 năm kinh nghiệm xây dựng các công cụ quản trị, hệ thống đa ngôn ngữ và tích hợp API thanh toán. Đam mê kiến trúc sạch, tự động hoá và交付 sản phẩm thực tế.",
+  location: "Biên Hoà, Đồng Nai, Việt Nam",
+  email: "trong6so1@gmail.com",
+  phone: "+84 378 030 009",
+  github: "https://github.com/trong6so1",
+  linkedin: "https://www.linkedin.com/in/dinh-hieu-trong",
+  cvUrl: "/cv/DINH-HIEU-TRONG-CV.pdf",
+  avatarInitials: "ĐT",
+  available: true,
+};
+
+export type SkillGroup = {
+  category: string;
+  icon: string; // lucide icon name
+  accent: string; // tailwind color class for the chip
+  skills: { name: string; level: number; note?: string }[];
+};
+
+export const skillGroups: SkillGroup[] = [
+  {
+    category: "Backend",
+    icon: "Server",
+    accent: "text-emerald-600 dark:text-emerald-400",
+    skills: [
+      { name: "PHP", level: 90, note: "5+ năm học & làm việc" },
+      { name: "Laravel", level: 90, note: "Framework chính" },
+      { name: "Node.js", level: 75, note: "API services" },
+      { name: "NestJS", level: 70, note: "Enterprise-grade" },
+    ],
+  },
+  {
+    category: "Database",
+    icon: "Database",
+    accent: "text-amber-600 dark:text-amber-400",
+    skills: [
+      { name: "MySQL", level: 90, note: "Master-Slave replication" },
+      { name: "PostgreSQL", level: 75, note: "Cấu trúc phức tạp" },
+      { name: "Redis", level: 70, note: "Cache & queue" },
+    ],
+  },
+  {
+    category: "DevOps",
+    icon: "Container",
+    accent: "text-sky-600 dark:text-sky-400",
+    skills: [
+      { name: "Docker", level: 80, note: "Triển khai production" },
+      { name: "GitHub Actions", level: 70, note: "CI/CD pipelines" },
+    ],
+  },
+  {
+    category: "Architecture & Khác",
+    icon: "Boxes",
+    accent: "text-violet-600 dark:text-violet-400",
+    skills: [
+      { name: "REST API", level: 88, note: "Thiết kế & versioning" },
+      { name: "CQRS", level: 65, note: "Tách đọc / ghi" },
+      { name: "DDD", level: 65, note: "Domain modelling" },
+    ],
+  },
+];
+
+export type Project = {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  highlights: string[];
+  tech: string[];
+  gradient: string; // tailwind gradient class for placeholder cover
+  emoji: string;
+  github?: string;
+  demo?: string;
+  year: string;
+  featured?: boolean;
+};
+
+export const projects: Project[] = [
+  {
+    id: "tool-pm",
+    title: "Tool PM — Product Management",
+    subtitle: "Hệ thống quản trị sản phẩm Webike (đa quốc gia)",
+    description:
+      "Nền tảng quản lý toàn bộ sản phẩm của Webike trên nhiều quốc gia. Cho phép thêm sản phẩm từ kho Nhật Bản, phát hành sang các website quốc gia khác và đồng bộ dữ liệu hằng ngày bằng batch command.",
+    highlights: [
+      "API cho phép các quốc gia thêm sản phẩm vào website nội địa.",
+      "Hàm Release sản phẩm — đẩy lên các site bán hàng quốc tế.",
+      "Batch command chạy hằng ngày đồng bộ từ kho Nhật → các quốc gia.",
+      "Bash SSH dump dữ liệu chéo giữa các database quốc gia.",
+      "Giao diện quản lý số lượng sản phẩm bằng Vue.js.",
+      "MySQL Replication Master-Slave để sao lưu dự phòng.",
+    ],
+    tech: ["Laravel", "Vue.js", "Docker", "MySQL", "Bash"],
+    gradient: "from-emerald-500/80 via-teal-500/60 to-cyan-500/40",
+    emoji: "📦",
+    year: "2024",
+    featured: true,
+  },
+  {
+    id: "tool-tm",
+    title: "Tool TM — Translate Management",
+    subtitle: "Quản lý dịch thuật sản phẩm Webike (Key–Value)",
+    description:
+      "Hệ thống quản lý dịch thông tin sản phẩm từ tiếng Nhật sang các ngôn ngữ khác theo mô hình Key–Value, gồm Translated Keys và Untranslated Keys (thông số sản phẩm). Tích hợp Google Translate API và nhiều phần mềm dịch thuật khác.",
+    highlights: [
+      "Màn hình đếm số Translated Keys theo từng trang.",
+      "Batch command đếm số key đã dịch hằng ngày cho từng trang.",
+      "CRUD translated keys + xuất dữ liệu ra file TSV.",
+      "Tích hợp Google API và nhiều dịch vụ dịch thuật bên thứ ba.",
+      "MySQL Replication Master-Slave + Docker cho production.",
+    ],
+    tech: ["Laravel", "Vue.js", "Docker", "MySQL", "Google API"],
+    gradient: "from-amber-500/80 via-orange-500/60 to-rose-500/40",
+    emoji: "🌐",
+    year: "2024",
+    featured: true,
+  },
+  {
+    id: "drinks-store",
+    title: "Website bán đồ uống trực tuyến",
+    subtitle: "Sàn thương mại điện tử (Internship)",
+    description:
+      "Website thương mại điện tử bán đồ uống với đầy đủ luồng đặt hàng, giỏ hàng và thanh toán. Thiết kế cơ sở dữ liệu bằng MySQL, viết backend bằng Laravel và front-end bằng jQuery.",
+    highlights: [
+      "Thiết kế database bằng MySQL cho sản phẩm, đơn hàng, người dùng.",
+      "Viết backend REST API với Laravel (CRUD, giỏ hàng, đơn hàng).",
+      "Phát triển front-end bằng jQuery cho trải nghiệm động.",
+      "Tích hợp cổng thanh toán MoMo cho toàn bộ đơn hàng.",
+    ],
+    tech: ["Laravel", "MySQL", "jQuery", "MoMo API"],
+    gradient: "from-violet-500/80 via-purple-500/60 to-fuchsia-500/40",
+    emoji: "🥤",
+    year: "2023",
+  },
+  {
+    id: "wedding-cards",
+    title: "Website bán thiệp cưới",
+    subtitle: "Sàn đặt thiệp cưới tuỳ chỉnh (Internship)",
+    description:
+      "Website cho phép khách hàng chọn mẫu thiệp cưới, tuỳ chỉnh thông tin và đặt hàng. Backend Laravel + MySQL, front-end bằng jQuery, luồng đặt hàng tối giản.",
+    highlights: [
+      "Quản lý mẫu thiệp với nhiều danh mục và tuỳ chỉnh nội dung.",
+      "Backend Laravel cho CRUD sản phẩm và đơn hàng.",
+      "Giao diện jQuery cho phép xem trước thiệp trực tiếp.",
+      "Tích hợp cổng thanh toán MoMo.",
+    ],
+    tech: ["Laravel", "MySQL", "jQuery", "MoMo API"],
+    gradient: "from-rose-500/80 via-pink-500/60 to-orange-500/40",
+    emoji: "💌",
+    year: "2023",
+  },
+];
+
+export type ExperienceItem = {
+  id: string;
+  role: string;
+  company: string;
+  period: string;
+  periodLabel: string;
+  type: "Intern" | "Full-time" | "Freelance";
+  summary: string;
+  achievements: string[];
+  stack: string[];
+};
+
+export const experiences: ExperienceItem[] = [
+  {
+    id: "rivercrane",
+    role: "Backend Developer (Staff)",
+    company: "Rivercrane — ADC Office",
+    period: "2024-03 — 2025-03",
+    periodLabel: "1 năm",
+    type: "Full-time",
+    summary:
+      "Phát triển các công cụ quản trị nội bộ cho nền tảng Webike — hệ thống thương mại điện tử xe máy / phụ tùng lớn của Nhật Bản. Làm việc trực tiếp với team Nhật Bản, đảm bảo chất lượng production và vận hành ổn định.",
+    achievements: [
+      "Xây dựng Tool PM — hệ thống quản lý sản phẩm đa quốc gia với batch command tự động chạy hằng ngày.",
+      "Phát hành sản phẩm từ kho Nhật sang website các quốc gia khác (Trung Quốc, Thái Lan, Indonesia...).",
+      "Triển khai MySQL Replication Master-Slave để sao lưu dự phòng.",
+      "Đưa mọi tính năng lên production bằng Docker, đảm bảo môi trường nhất quán.",
+      "Xây dựng Tool TM — quản lý dịch thuật Key-Value, tích hợp Google Translate API.",
+    ],
+    stack: ["Laravel", "Vue.js", "MySQL", "Docker", "Bash", "Google API"],
+  },
+  {
+    id: "smart-digitech",
+    role: "Backend Developer (Intern)",
+    company: "Smart Digitech",
+    period: "2023-10 — 2024-01",
+    periodLabel: "4 tháng",
+    type: "Intern",
+    summary:
+      "Thực tập phát triển website thương mại điện tử với Laravel + MySQL. Tham gia đầy đủ các giai đoạn từ thiết kế database, viết backend, làm front-end và tích hợp cổng thanh toán.",
+    achievements: [
+      "Thiết kế database MySQL cho website bán đồ uống và website bán thiệp cưới.",
+      "Phát triển backend REST API với Laravel.",
+      "Tham gia viết front-end bằng jQuery.",
+      "Tích hợp API thanh toán MoMo cho đơn hàng.",
+    ],
+    stack: ["Laravel", "MySQL", "jQuery", "MoMo API"],
+  },
+];
+
+export type EducationItem = {
+  school: string;
+  degree: string;
+  period: string;
+  gpa: string;
+};
+
+export const education: EducationItem = {
+  school: "Trường Đại học Công nghệ Đồng Nai",
+  degree: "Cử nhân Công nghệ Thông tin",
+  period: "2019-08 — 2023-08",
+  gpa: "3.24 / 4.0",
+};
+
+export type StatItem = { label: string; value: string; hint: string };
+
+export const stats: StatItem[] = [
+  { label: "Kinh nghiệm", value: "1+ năm", hint: "Backend development" },
+  { label: "Dự án thực tế", value: "4+", hint: "Production-grade" },
+  { label: "Sản phẩm quốc tế", value: "5+", hint: "Quốc gia triển khai" },
+  { label: "GPA", value: "3.24", hint: "ĐH Công nghệ Đồng Nai" },
+];
+
+export const navLinks = [
+  { href: "#about", label: "About" },
+  { href: "#skills", label: "Skills" },
+  { href: "#projects", label: "Projects" },
+  { href: "#experience", label: "Experience" },
+  { href: "#contact", label: "Contact" },
+];
