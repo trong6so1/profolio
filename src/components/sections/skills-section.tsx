@@ -12,6 +12,7 @@ import {
 import { skillGroups } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCountUp } from "@/hooks/use-count-up";
 
 const iconMap: Record<string, LucideIcon> = {
   Server,
@@ -71,36 +72,7 @@ export function SkillsSection() {
 
                     <ul className="mt-5 space-y-4">
                       {group.skills.map((skill, si) => (
-                        <li key={skill.name}>
-                          <div className="flex items-baseline justify-between gap-2">
-                            <span className="text-sm font-semibold text-foreground">
-                              {skill.name}
-                            </span>
-                            <span className="font-mono text-xs font-medium text-primary">
-                              {skill.level}%
-                            </span>
-                          </div>
-                          {skill.note && (
-                            <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground">
-                              {skill.note}
-                            </p>
-                          )}
-                          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary/80">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${skill.level}%` }}
-                              viewport={{ once: true, margin: "-40px" }}
-                              transition={{
-                                duration: 1,
-                                delay: 0.2 + si * 0.1,
-                                ease: [0.22, 1, 0.36, 1],
-                              }}
-                              className="relative h-full rounded-full bg-gradient-to-r from-primary to-emerald-400"
-                            >
-                              <span className="absolute inset-y-0 right-0 w-1.5 rounded-full bg-white/60 blur-[1px]" />
-                            </motion.div>
-                          </div>
-                        </li>
+                        <SkillRow key={skill.name} skill={skill} delay={si * 0.1} />
                       ))}
                     </ul>
                   </CardContent>
@@ -171,5 +143,44 @@ export function SkillsSection() {
         </motion.div>
       </div>
     </section>
+  );
+}
+
+type Skill = (typeof skillGroups)[number]["skills"][number];
+
+function SkillRow({ skill, delay }: { skill: Skill; delay: number }) {
+  const { ref, display } = useCountUp(`${skill.level}%`, 1.4);
+
+  return (
+    <li>
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-sm font-semibold text-foreground">
+          {skill.name}
+        </span>
+        <span ref={ref} className="font-mono text-xs font-medium text-primary">
+          {display}
+        </span>
+      </div>
+      {skill.note && (
+        <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground">
+          {skill.note}
+        </p>
+      )}
+      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary/80">
+        <motion.div
+          initial={{ width: 0 }}
+          whileInView={{ width: `${skill.level}%` }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{
+            duration: 1,
+            delay: 0.2 + delay,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="relative h-full rounded-full bg-gradient-to-r from-primary to-[oklch(0.72_0.18_290)]"
+        >
+          <span className="absolute inset-y-0 right-0 w-1.5 rounded-full bg-white/60 blur-[1px]" />
+        </motion.div>
+      </div>
+    </li>
   );
 }

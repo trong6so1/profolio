@@ -34,7 +34,7 @@ export const skillGroups: SkillGroup[] = [
   {
     category: "Backend",
     icon: "Server",
-    accent: "text-emerald-600 dark:text-emerald-400",
+    accent: "text-primary",
     skills: [
       { name: "PHP", level: 90, note: "5+ năm học & làm việc" },
       { name: "Laravel", level: 90, note: "Framework chính" },
@@ -45,7 +45,7 @@ export const skillGroups: SkillGroup[] = [
   {
     category: "Database",
     icon: "Database",
-    accent: "text-amber-600 dark:text-amber-400",
+    accent: "text-warning",
     skills: [
       { name: "MySQL", level: 90, note: "Master-Slave replication" },
       { name: "PostgreSQL", level: 75, note: "Cấu trúc phức tạp" },
@@ -104,7 +104,7 @@ export const projects: Project[] = [
       "MySQL Replication Master-Slave để sao lưu dự phòng.",
     ],
     tech: ["Laravel", "Vue.js", "Docker", "MySQL", "Bash"],
-    gradient: "from-emerald-500/80 via-teal-500/60 to-cyan-500/40",
+    gradient: "from-[oklch(0.62_0.17_230)]/80 via-[oklch(0.65_0.18_290)]/60 to-[oklch(0.62_0.16_155)]/40",
     emoji: "📦",
     year: "2024",
     featured: true,
@@ -123,7 +123,7 @@ export const projects: Project[] = [
       "MySQL Replication Master-Slave + Docker cho production.",
     ],
     tech: ["Laravel", "Vue.js", "Docker", "MySQL", "Google API"],
-    gradient: "from-amber-500/80 via-orange-500/60 to-rose-500/40",
+    gradient: "from-[oklch(0.75_0.15_75)]/80 via-[oklch(0.65_0.20_25)]/60 to-[oklch(0.62_0.20_25)]/40",
     emoji: "🌐",
     year: "2024",
     featured: true,
@@ -141,7 +141,7 @@ export const projects: Project[] = [
       "Tích hợp cổng thanh toán MoMo cho toàn bộ đơn hàng.",
     ],
     tech: ["Laravel", "MySQL", "jQuery", "MoMo API"],
-    gradient: "from-violet-500/80 via-purple-500/60 to-fuchsia-500/40",
+    gradient: "from-[oklch(0.65_0.18_290)]/80 via-[oklch(0.62_0.20_290)]/60 to-[oklch(0.62_0.17_230)]/40",
     emoji: "🥤",
     year: "2023",
   },
@@ -158,7 +158,7 @@ export const projects: Project[] = [
       "Tích hợp cổng thanh toán MoMo.",
     ],
     tech: ["Laravel", "MySQL", "jQuery", "MoMo API"],
-    gradient: "from-rose-500/80 via-pink-500/60 to-orange-500/40",
+    gradient: "from-[oklch(0.65_0.20_25)]/80 via-[oklch(0.62_0.20_25)]/60 to-[oklch(0.75_0.15_75)]/40",
     emoji: "💌",
     year: "2023",
   },

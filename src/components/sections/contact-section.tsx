@@ -35,21 +35,21 @@ const contactChannels = [
     label: "Email",
     value: profile.email,
     href: `mailto:${profile.email}`,
-    accent: "from-emerald-500/15 to-emerald-500/0 text-emerald-600 dark:text-emerald-400",
+    accent: "from-primary/15 to-primary/0 text-primary",
   },
   {
     icon: Phone,
     label: "Điện thoại",
     value: profile.phone,
     href: `tel:${profile.phone.replace(/\s/g, "")}`,
-    accent: "from-amber-500/15 to-amber-500/0 text-amber-600 dark:text-amber-400",
+    accent: "from-warning/15 to-warning/0 text-warning",
   },
   {
     icon: MapPin,
     label: "Địa điểm",
     value: profile.location,
     href: "https://maps.google.com/?q=Bien+Hoa+Dong+Nai",
-    accent: "from-sky-500/15 to-sky-500/0 text-sky-600 dark:text-sky-400",
+    accent: "from-accent-foreground/15 to-accent-foreground/0 text-accent-foreground",
   },
 ];
 
@@ -202,20 +202,20 @@ export function ContactSection() {
             </Card>
 
             {/* Availability badge */}
-            <div className="spotlight-card relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5 transition-colors hover:border-emerald-500/50">
+            <div className="spotlight-card relative overflow-hidden rounded-2xl border border-success/30 bg-success/5 p-5 transition-colors hover:border-success/50">
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-500/20 blur-3xl"
+                className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-success/20 blur-3xl"
               />
               <div className="relative z-10 flex items-center gap-3">
                 <span className="relative flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-success" />
                 </span>
                 <p className="text-sm font-medium text-foreground">
                   Sẵn sàng cho cơ hội mới
                 </p>
-                <Sparkles className="ml-auto h-4 w-4 text-emerald-500" />
+                <Sparkles className="ml-auto h-4 w-4 text-success" />
               </div>
               <p className="relative z-10 mt-2 text-sm text-muted-foreground">
                 Mình đang mở cho các vị trí Backend Developer (Laravel / Node.js) —
@@ -291,7 +291,7 @@ export function ContactSection() {
                         exit={{ opacity: 0, y: -8, scale: 0.98 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                         role="status"
-                        className="flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-sm text-emerald-700 dark:text-emerald-300"
+                        className="flex items-start gap-3 rounded-xl border border-success/30 bg-success/10 p-3.5 text-sm text-success"
                       >
                         <motion.span
                           initial={{ scale: 0, rotate: -30 }}
@@ -397,7 +397,7 @@ function GlowInput({
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute -inset-0.5 -z-10 rounded-lg bg-gradient-to-r from-primary/30 via-emerald-400/30 to-amber-300/30 opacity-0 blur-md transition-opacity duration-300 group-focus-within/input:opacity-100"
+        className="pointer-events-none absolute -inset-0.5 -z-10 rounded-lg bg-gradient-to-r from-primary/30 via-primary/30 to-accent-foreground/30 opacity-0 blur-md transition-opacity duration-300 group-focus-within/input:opacity-100"
       />
     </div>
   );
@@ -423,7 +423,7 @@ function GlowTextarea({
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute -inset-0.5 -z-10 rounded-lg bg-gradient-to-r from-primary/30 via-emerald-400/30 to-amber-300/30 opacity-0 blur-md transition-opacity duration-300 group-focus-within/input:opacity-100"
+        className="pointer-events-none absolute -inset-0.5 -z-10 rounded-lg bg-gradient-to-r from-primary/30 via-primary/30 to-accent-foreground/30 opacity-0 blur-md transition-opacity duration-300 group-focus-within/input:opacity-100"
       />
     </div>
   );

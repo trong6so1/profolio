@@ -5,6 +5,7 @@ import { ScrollProgress } from "@/components/shared/scroll-progress";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
 import { MouseSpotlight } from "@/components/shared/mouse-spotlight";
 import { SectionDivider } from "@/components/shared/section-divider";
+import { LoadingScreen } from "@/components/shared/loading-screen";
 import { HeroSection } from "@/components/sections/hero-section";
 import { AboutSection } from "@/components/sections/about-section";
 import { SkillsSection } from "@/components/sections/skills-section";
@@ -16,6 +17,7 @@ export default function Home() {
   return (
     <>
       <StructuredData />
+      <LoadingScreen />
       <ScrollProgress />
       <MouseSpotlight />
       <ScrollToTop />

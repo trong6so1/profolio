@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Calendar, Building2, CheckCircle2, Briefcase } from "lucide-react";
 import { experiences } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -10,14 +10,22 @@ import { cn } from "@/lib/utils";
 
 const typeStyles: Record<string, string> = {
   "Full-time":
-    "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20",
+    "bg-primary/10 text-primary ring-1 ring-primary/20",
   Intern:
-    "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-1 ring-amber-500/20",
+    "bg-warning/10 text-warning ring-1 ring-warning/20",
   Freelance:
-    "bg-violet-500/10 text-violet-600 dark:text-violet-400 ring-1 ring-violet-500/20",
+    "bg-accent-foreground/15 text-accent-foreground ring-1 ring-accent-foreground/25",
 };
 
 export function ExperienceSection() {
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 70%", "end 80%"],
+  });
+  // Timeline line draws as user scrolls
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   return (
     <section
       id="experience"
@@ -34,12 +42,20 @@ export function ExperienceSection() {
           description="Mỗi vai trò là một bước đệm — từ thực tập xây dựng sàn TMĐT đến phát triển công cụ quản trị cho nền tảng quốc tế."
         />
 
-        <div className="relative mt-14">
-          {/* Vertical line — left on mobile, center on md+ */}
+        <div ref={containerRef} className="relative mt-14">
+          {/* Track background */}
           <div
             aria-hidden
-            className="absolute left-5 top-2 bottom-2 w-px bg-gradient-to-b from-primary/70 via-border to-transparent md:left-1/2 md:-translate-x-1/2"
+            className="absolute left-5 top-2 bottom-2 w-px bg-border md:left-1/2 md:-translate-x-1/2"
           />
+          {/* Animated progress line (draws on scroll) */}
+          <motion.div
+            aria-hidden
+            style={{ height: lineHeight }}
+            className="absolute left-5 top-2 w-px bg-gradient-to-b from-primary via-primary to-[oklch(0.72_0.18_290)] md:left-1/2 md:-translate-x-1/2"
+          >
+            <span className="absolute -left-px top-0 h-2 w-[3px] rounded-full bg-primary shadow-[0_0_8px_var(--primary-glow)]" />
+          </motion.div>
 
           <ol className="space-y-10 md:space-y-14">
             {experiences.map((exp, i) => (
@@ -65,16 +81,20 @@ function TimelineItem({ exp, index }: { exp: Exp; index: number }) {
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       className="relative pl-14 md:grid md:grid-cols-2 md:items-center md:gap-12 md:pl-0"
     >
-      {/* Node dot — fixed position on the line */}
-      <span
+      {/* Node dot — pops in when scrolled to */}
+      <motion.span
         aria-hidden
+        initial={{ scale: 0, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
         className="absolute left-5 top-6 z-10 -translate-x-1/2 md:left-1/2 md:top-1/2 md:-translate-y-1/2"
       >
         <span className="relative flex h-4 w-4 items-center justify-center">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/40" />
           <span className="glow-dot relative inline-flex h-3.5 w-3.5 rounded-full bg-primary ring-2 ring-background" />
         </span>
-      </span>
+      </motion.span>
 
       {/* Card — full width on mobile, alternating side on md+ */}
       <div

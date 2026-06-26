@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { navLinks, profile } from "@/lib/data";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -11,16 +11,27 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
+  const { scrollY } = useScroll();
   const [scrolled, setScrolled] = React.useState(false);
+  const [hidden, setHidden] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [active, setActive] = React.useState<string>("");
 
-  React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Auto-hide on scroll-down, show on scroll-up
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setScrolled(latest > 16);
+    // Don't hide when mobile menu open or near top
+    if (mobileOpen || latest < 100) {
+      setHidden(false);
+      return;
+    }
+    if (latest > previous && latest > 240) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
   React.useEffect(() => {
     const ids = navLinks.map((l) => l.href.slice(1));
@@ -49,7 +60,13 @@ export function Navbar() {
   }, [mobileOpen]);
 
   return (
-    <header
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{
+        y: hidden ? -100 : 0,
+        opacity: 1,
+      }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled
@@ -63,10 +80,10 @@ export function Navbar() {
           className="group flex items-center gap-2.5 text-foreground"
           aria-label={`${profile.name} — Home`}
         >
-          <span className="relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 font-display text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+          <span className="relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary to-[oklch(0.65_0.18_290)] font-display text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
             <span className="shine-sweep absolute inset-0" />
             ĐT
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-background transition-transform duration-300 group-hover:scale-125" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background transition-transform duration-300 group-hover:scale-125" />
           </span>
           <span className="hidden font-display text-sm font-semibold tracking-tight transition-colors group-hover:text-primary sm:block">
             {profile.name}
@@ -102,7 +119,7 @@ export function Navbar() {
             <Button
               asChild
               size="sm"
-              className="shine-sweep h-9 rounded-full bg-primary px-4 text-primary-foreground shadow-md shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30"
+              className="shine-sweep group h-9 rounded-full bg-primary px-4 text-primary-foreground shadow-md shadow-primary/25 transition-all hover:shadow-lg hover:shadow-primary/30"
             >
               <Link href="#contact">
                 Liên hệ
@@ -127,53 +144,51 @@ export function Navbar() {
       {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
-          <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 top-16 z-40 bg-background/95 backdrop-blur-xl md:hidden"
+            onClick={() => setMobileOpen(false)}
+          >
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 top-16 z-40 bg-background/95 backdrop-blur-xl md:hidden"
-              onClick={() => setMobileOpen(false)}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, delay: 0.04 }}
+              className="flex flex-col gap-1 px-6 py-6"
             >
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2, delay: 0.04 }}
-                className="flex flex-col gap-1 px-6 py-6"
-              >
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.04 * i + 0.06 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium text-foreground/90 transition-colors hover:bg-secondary"
-                    >
-                      {link.label}
-                      <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
-                    </Link>
-                  </motion.div>
-                ))}
-                <Button
-                  asChild
-                  className="mt-3 h-11 rounded-xl bg-primary text-primary-foreground"
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.04 * i + 0.06 }}
                 >
-                  <Link href="#contact" onClick={() => setMobileOpen(false)}>
-                    Liên hệ với tôi
-                    <ArrowUpRight className="ml-2 h-4 w-4" />
+                  <Link
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium text-foreground/90 transition-colors hover:bg-secondary"
+                  >
+                    {link.label}
+                    <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
-                </Button>
-              </motion.div>
+                </motion.div>
+              ))}
+              <Button
+                asChild
+                className="mt-3 h-11 rounded-xl bg-primary text-primary-foreground"
+              >
+                <Link href="#contact" onClick={() => setMobileOpen(false)}>
+                  Liên hệ với tôi
+                  <ArrowUpRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }

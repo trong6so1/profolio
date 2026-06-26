@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   ArrowDown,
   Download,
@@ -16,6 +16,9 @@ import { profile, stats } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { useTilt } from "@/hooks/use-pointer";
 import { Magnetic } from "@/components/shared/magnetic";
+import { Particles } from "@/components/shared/particles";
+import { useMousePosition } from "@/hooks/use-mouse-position";
+import { useCountUp } from "@/hooks/use-count-up";
 
 const container = {
   hidden: { opacity: 0 },
@@ -37,6 +40,15 @@ const item = {
 export function HeroSection() {
   const reduceMotion = useReducedMotion();
   const [roleIdx, setRoleIdx] = React.useState(0);
+  const mouse = useMousePosition();
+
+  // Parallax motion values for avatar card
+  const mx = useSpring(mouse.x, { stiffness: 80, damping: 20 });
+  const my = useSpring(mouse.y, { stiffness: 80, damping: 20 });
+  const cardX = useTransform(mx, (v) => v * -12);
+  const cardY = useTransform(my, (v) => v * -12);
+  const blob1X = useTransform(mx, (v) => v * 30);
+  const blob1Y = useTransform(my, (v) => v * 30);
 
   React.useEffect(() => {
     if (reduceMotion) return;
@@ -55,17 +67,23 @@ export function HeroSection() {
       <div className="aurora pointer-events-none absolute inset-0 -z-20 opacity-70" />
 
       {/* Background grid */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-50" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-40" />
 
-      {/* Animated gradient blobs */}
+      {/* Floating particles */}
+      <Particles count={20} />
+
+      {/* Animated gradient blobs with mouse parallax */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="blob absolute -top-32 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-emerald-500/15 dark:bg-emerald-500/10" />
+        <motion.div
+          style={{ x: blob1X, y: blob1Y }}
+          className="blob absolute -top-32 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-primary/15"
+        />
         <div
-          className="blob absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-amber-400/10"
+          className="blob absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[oklch(0.72_0.18_290)]/10"
           style={{ animationDelay: "-6s" }}
         />
         <div
-          className="blob absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-teal-500/10"
+          className="blob absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-[oklch(0.72_0.15_155)]/10"
           style={{ animationDelay: "-12s" }}
         />
       </div>
@@ -82,8 +100,8 @@ export function HeroSection() {
             <motion.div variants={item}>
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3.5 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
                 </span>
                 {profile.available ? "Sẵn sàng cho cơ hội mới" : "Đang bận"}
                 <span className="mx-1 h-1 w-1 rounded-full bg-border" />
@@ -182,36 +200,17 @@ export function HeroSection() {
               className="mt-6 grid w-full max-w-xl grid-cols-2 gap-3 sm:grid-cols-4"
             >
               {stats.map((s, i) => (
-                <motion.div
-                  key={s.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 + i * 0.08, duration: 0.5 }}
-                  whileHover={{ y: -4 }}
-                  className="spotlight-card lift-on-hover group relative overflow-hidden rounded-2xl border border-border/60 bg-background/50 p-4 backdrop-blur hover:border-primary/40 hover:shadow-depth"
-                >
-                  <div className="relative z-10">
-                    <p className="number-ticker font-display text-2xl font-bold leading-none transition-transform group-hover:scale-105">
-                      {s.value}
-                    </p>
-                    <p className="mt-1.5 text-xs font-semibold text-foreground/80">
-                      {s.label}
-                    </p>
-                    <p className="mt-0.5 text-[10px] leading-tight text-muted-foreground">
-                      {s.hint}
-                    </p>
-                  </div>
-                  <span
-                    className="absolute inset-x-0 bottom-0 h-px gradient-bar opacity-0 transition-opacity group-hover:opacity-100"
-                    style={{ animationDelay: `${i * -1}s` }}
-                  />
-                </motion.div>
+                <StatCard key={s.label} stat={s} index={i} />
               ))}
             </motion.div>
           </div>
 
           {/* Right: avatar / portrait card */}
-          <motion.div variants={item} className="relative mx-auto w-full max-w-sm">
+          <motion.div
+            variants={item}
+            style={{ x: cardX, y: cardY }}
+            className="relative mx-auto w-full max-w-sm"
+          >
             <div className="bob">
               <AvatarCard />
             </div>
@@ -251,7 +250,7 @@ function AvatarCard() {
   return (
     <div className="relative">
       {/* Decorative gradient ring */}
-      <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-emerald-500/30 via-teal-500/20 to-amber-400/20 opacity-60 blur-2xl" />
+      <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-primary/30 via-primary/20 to-accent-foreground/20 opacity-60 blur-2xl" />
 
       {/* Rotating conic ring */}
       <div
@@ -271,10 +270,10 @@ function AvatarCard() {
         onPointerLeave={tilt.onLeave}
         whileHover={{ y: -4 }}
         transition={{ type: "spring", stiffness: 300, damping: 24 }}
-        className="tilt-3d spotlight-card relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-border/60 bg-gradient-to-br from-emerald-500/15 via-background to-amber-400/10 p-1 shadow-2xl shadow-emerald-500/10"
+        className="tilt-3d spotlight-card relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-border/60 bg-gradient-to-br from-primary/15 via-background to-accent-foreground/10 p-1 shadow-2xl shadow-primary/10"
         style={{ transform: "perspective(900px)" }}
       >
-        <div className="relative h-full w-full overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-emerald-100 via-amber-50 to-rose-100 dark:from-emerald-950/40 dark:via-slate-900 dark:to-amber-950/30">
+        <div className="relative h-full w-full overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-primary/10 via-background to-accent-foreground/5 dark:from-primary/10 dark:via-card dark:to-accent/10">
           {/* Stylised avatar — initials monogram with floating tech glyphs */}
           <div className="absolute inset-0 bg-dots opacity-30" />
           <div className="noise absolute inset-0" />
@@ -287,7 +286,7 @@ function AvatarCard() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-              className="pulse-ring relative flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 shadow-2xl shadow-emerald-500/40 sm:h-48 sm:w-48"
+              className="pulse-ring relative flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-br from-primary to-[oklch(0.65_0.18_290)] shadow-2xl shadow-primary/40 sm:h-48 sm:w-48"
             >
               <span className="font-display text-5xl font-bold text-white drop-shadow sm:text-6xl">
                 {profile.avatarInitials}
@@ -366,5 +365,37 @@ function FloatingChip({
       <span className="h-1.5 w-1.5 rounded-full bg-primary" />
       {label}
     </motion.span>
+  );
+}
+
+type StatItem = (typeof stats)[number];
+
+function StatCard({ stat, index }: { stat: StatItem; index: number }) {
+  const { ref, display } = useCountUp(stat.value, 1.6);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6 + index * 0.08, duration: 0.5 }}
+      whileHover={{ y: -4 }}
+      className="spotlight-card lift-on-hover group relative overflow-hidden rounded-2xl border border-border/60 bg-background/50 p-4 backdrop-blur hover:border-primary/40 hover:shadow-depth"
+    >
+      <div ref={ref} className="relative z-10">
+        <p className="number-ticker font-display text-2xl font-bold leading-none transition-transform group-hover:scale-105">
+          {display}
+        </p>
+        <p className="mt-1.5 text-xs font-semibold text-foreground/80">
+          {stat.label}
+        </p>
+        <p className="mt-0.5 text-[10px] leading-tight text-muted-foreground">
+          {stat.hint}
+        </p>
+      </div>
+      <span
+        className="absolute inset-x-0 bottom-0 h-px gradient-bar opacity-0 transition-opacity group-hover:opacity-100"
+        style={{ animationDelay: `${index * -1}s` }}
+      />
+    </motion.div>
   );
 }

@@ -25,7 +25,7 @@ export function Footer() {
               href="#hero"
               className="group flex items-center gap-2.5 text-foreground"
             >
-              <span className="relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 font-display text-sm font-bold text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+              <span className="relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary to-[oklch(0.65_0.18_290)] font-display text-sm font-bold text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                 <span className="shine-sweep absolute inset-0" />
                 ĐT
               </span>
@@ -99,8 +99,8 @@ export function Footer() {
           </p>
           <p className="flex items-center gap-1.5">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
             </span>
             Sẵn sàng cho cơ hội mới
           </p>
