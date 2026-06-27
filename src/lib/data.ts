@@ -10,9 +10,9 @@ export const profile = {
   role: "Software Engineer",
   roles: ["Software Engineer", "Backend Developer", "PHP / Laravel Specialist"],
   tagline:
-    "Xây dựng hệ thống backend ổn định, dễ mở rộng và có thể bảo trì — bằng Laravel, Node.js và tư duy kiến trúc sạch.",
+    "Tôi thích những dòng code chạy âm thầm lúc 3 giờ sáng — batch job xong việc, hệ thống vẫn êm, và không ai phải thức dậy vì alert.",
   shortBio:
-    "Backend Developer với hơn 1 năm kinh nghiệm xây dựng các công cụ quản trị, hệ thống đa ngôn ngữ và tích hợp API thanh toán. Đam mê kiến trúc sạch, tự động hoá và交付 sản phẩm thực tế.",
+    "Backend Developer sinh năm 2001 ở Biên Hoà. Yêu Laravel từ ngày thực tập, mê Docker từ khi ra quân, và tin rằng backend tử tế là backend có tài liệu đi kèm.",
   location: "Biên Hoà, Đồng Nai, Việt Nam",
   email: "trong6so1@gmail.com",
   phone: "+84 378 030 009",
@@ -27,7 +27,7 @@ export type SkillGroup = {
   category: string;
   icon: string; // lucide icon name
   accent: string; // tailwind color class for the chip
-  skills: { name: string; level: number; note?: string }[];
+  skills: { name: string; level: number; note?: string; detail?: string }[];
 };
 
 export const skillGroups: SkillGroup[] = [
@@ -36,10 +36,34 @@ export const skillGroups: SkillGroup[] = [
     icon: "Server",
     accent: "text-primary",
     skills: [
-      { name: "PHP", level: 90, note: "5+ năm học & làm việc" },
-      { name: "Laravel", level: 90, note: "Framework chính" },
-      { name: "Node.js", level: 75, note: "API services" },
-      { name: "NestJS", level: 70, note: "Enterprise-grade" },
+      {
+        name: "PHP",
+        level: 90,
+        note: "Ngôn ngữ quen thuộc nhất",
+        detail:
+          "Viết code PHP từ năm nhất đại học. Đã qua giai đoạn “sửa bug bằng echo”, giờ nghiện clean code và type hint.",
+      },
+      {
+        name: "Laravel",
+        level: 90,
+        note: "Framework chính",
+        detail:
+          "Framework mình dành nhiều đêm nhất. Queue, Job, Event, Policy — thuộc lòng và dùng đúng chỗ.",
+      },
+      {
+        name: "Node.js",
+        level: 75,
+        note: "Side quest",
+        detail:
+          "Mỗi khi cần microservice chạy async hoặc xử lý real-time, Node.js là lựa chọn mình reach tới đầu tiên.",
+      },
+      {
+        name: "NestJS",
+        level: 70,
+        note: "Enterprise taste",
+        detail:
+          "Học để mở rộng tư duy OOP và dependency injection. Module hoá rõ ràng — cảm giác như viết Java mà không nặng Java.",
+      },
     ],
   },
   {
@@ -47,28 +71,76 @@ export const skillGroups: SkillGroup[] = [
     icon: "Database",
     accent: "text-warning",
     skills: [
-      { name: "MySQL", level: 90, note: "Master-Slave replication" },
-      { name: "PostgreSQL", level: 75, note: "Cấu trúc phức tạp" },
-      { name: "Redis", level: 70, note: "Cache & queue" },
+      {
+        name: "MySQL",
+        level: 90,
+        note: "Đã setup Master-Slave",
+        detail:
+          "Thiết kế schema, tối ưu query, viết replication Master-Slave cho production. Index là bạn, N+1 là thù.",
+      },
+      {
+        name: "PostgreSQL",
+        level: 75,
+        note: "Khi cần JSONB & CTE",
+        detail:
+          "Chọn Postgres khi cần tính năng mà MySQL không có sẵn: JSONB, window function, common table expression.",
+      },
+      {
+        name: "Redis",
+        level: 70,
+        note: "Cache & queue",
+        detail:
+          "Dùng làm cache layer cho API nóng, làm queue driver cho Laravel Horizon. Hiểu TTL là sức mạnh.",
+      },
     ],
   },
   {
     category: "DevOps",
     icon: "Container",
-    accent: "text-sky-600 dark:text-sky-400",
+    accent: "text-accent-foreground",
     skills: [
-      { name: "Docker", level: 80, note: "Triển khai production" },
-      { name: "GitHub Actions", level: 70, note: "CI/CD pipelines" },
+      {
+        name: "Docker",
+        level: 80,
+        note: "Triển khai production",
+        detail:
+          "Đóng gói mọi thứ thành image trước khi đưa lên server. “Works on my machine” không phải câu mình thích nói.",
+      },
+      {
+        name: "GitHub Actions",
+        level: 70,
+        note: "CI/CD pipelines",
+        detail:
+          "Automate cái gì lặp lại 3 lần trở lên. Lint, test, build, deploy — để máy làm, mình đi cà phê.",
+      },
     ],
   },
   {
     category: "Architecture & Khác",
     icon: "Boxes",
-    accent: "text-violet-600 dark:text-violet-400",
+    accent: "text-accent-foreground",
     skills: [
-      { name: "REST API", level: 88, note: "Thiết kế & versioning" },
-      { name: "CQRS", level: 65, note: "Tách đọc / ghi" },
-      { name: "DDD", level: 65, note: "Domain modelling" },
+      {
+        name: "REST API",
+        level: 88,
+        note: "Thiết kế & versioning",
+        detail:
+          "Versioning bằng URL, status code đúng ngữ nghĩa, pagination nhất quán. API contract là thứ mình never skip review.",
+      },
+      {
+        name: "CQRS",
+        level: 65,
+        note: "Tách đọc / ghi",
+        detail:
+          "Áp dụng cho vài module có read/write ratio lệch hẳn. Hiểu trade-off — không phải lúc nào cũng cần.",
+      },
+      {
+        name: "DDD",
+        level: 65,
+        note: "Domain modelling",
+        detail:
+          "Học để nghĩ về business trước, table sau. Bounded context, aggregate root — còn hơi trừu tượng nhưng đang đi đúng hướng.",
+      },
     ],
   },
 ];

@@ -13,6 +13,12 @@ import { skillGroups } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCountUp } from "@/hooks/use-count-up";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const iconMap: Record<string, LucideIcon> = {
   Server,
@@ -154,9 +160,26 @@ function SkillRow({ skill, delay }: { skill: Skill; delay: number }) {
   return (
     <li>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-sm font-semibold text-foreground">
-          {skill.name}
-        </span>
+        <TooltipProvider delayDuration={150}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                data-cursor="hover"
+                className="cursor-help text-sm font-semibold text-foreground underline-offset-4 decoration-dotted decoration-muted-foreground/40 transition-all hover:text-primary hover:decoration-primary"
+              >
+                {skill.name}
+              </span>
+            </TooltipTrigger>
+            {skill.detail && (
+              <TooltipContent
+                side="top"
+                className="max-w-[220px] border-border/60 bg-popover/95 text-popover-foreground backdrop-blur-xl"
+              >
+                <p className="text-xs leading-relaxed">{skill.detail}</p>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
         <span ref={ref} className="font-mono text-xs font-medium text-primary">
           {display}
         </span>

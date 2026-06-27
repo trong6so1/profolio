@@ -6,6 +6,8 @@ import { ScrollToTop } from "@/components/shared/scroll-to-top";
 import { MouseSpotlight } from "@/components/shared/mouse-spotlight";
 import { SectionDivider } from "@/components/shared/section-divider";
 import { LoadingScreen } from "@/components/shared/loading-screen";
+import { TableOfContents } from "@/components/shared/table-of-contents";
+import { CustomCursor } from "@/components/shared/custom-cursor";
 import { HeroSection } from "@/components/sections/hero-section";
 import { AboutSection } from "@/components/sections/about-section";
 import { SkillsSection } from "@/components/sections/skills-section";
@@ -20,6 +22,8 @@ export default function Home() {
       <LoadingScreen />
       <ScrollProgress />
       <MouseSpotlight />
+      <CustomCursor />
+      <TableOfContents />
       <ScrollToTop />
       <div className="relative flex min-h-screen flex-col">
         <Navbar />

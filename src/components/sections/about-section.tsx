@@ -84,24 +84,29 @@ export function AboutSection() {
           >
             <div className="space-y-4 text-base leading-relaxed text-muted-foreground">
               <p>
-                Mình là <strong className="text-foreground">{profile.name}</strong>, một{" "}
-                <strong className="text-foreground">Software Engineer</strong> tập trung vào
-                phát triển backend. Hơn một năm qua mình đã làm việc tại{" "}
-                <strong className="text-foreground">Rivercrane (ADC Office)</strong> — xây
-                dựng các công cụ quản trị nội bộ cho nền tảng Webike, phục vụ thị trường Nhật
-                Bản và nhiều quốc gia khác.
+                Mình là <strong className="text-foreground">{profile.name}</strong> —
+                một backend developer sinh năm 2001 ở Biên Hoà. Hành trình viết code
+                bắt đầu năm nhất đại học khi lần đầu chạm vào PHP, và từ đó Laravel
+                trở thành “ngôn ngữ mẹ đẻ” của mình.
               </p>
               <p>
-                Công việc hằng ngày của mình bao gồm thiết kế cơ sở dữ liệu, viết API với
-                Laravel, xây dựng batch command tự động, triển khai Docker và duy trì hệ thống
-                MySQL Replication. Mình tin rằng backend tốt không chỉ là code chạy được — mà
-                là code rõ ràng, có thể bảo trì, có thể mở rộng và có tài liệu đi kèm.
+                Hơn một năm qua mình làm tại{" "}
+                <strong className="text-foreground">Rivercrane (ADC Office)</strong> —
+                xây công cụ quản trị nội bộ cho nền tảng Webike, phục vụ thị trường
+                Nhật và vài quốc gia khác. Ngày nào cũng interface với schema MySQL,
+                batch command chạy đêm, Docker image, và MySQL replication.
               </p>
               <p>
-                Ngoài công việc, mình tích cực học thêm Node.js / NestJS và các pattern kiến
-                trúc hiện đại (CQRS, DDD) để sẵn sàng cho những hệ thống phức tạp hơn trong
-                tương lai. Mình cũng quan tâm tới DevOps, CI/CD và tự động hoá quy trình vận
-                hành.
+                Mình tin backend tử tế không phải là code chạy được — mà là code mà
+                đồng nghiệp sau này mở ra vẫn hiểu, vẫn mở rộng được, và không phải
+                nguyền rủa tác giả. Tài liệu đi kèm, naming rõ nghĩa, trade-off được
+                ghi rõ — đó là tiêu chuẩn mình cố gắng giữ.
+              </p>
+              <p>
+                Ngoài giờ làm, mình học thêm Node.js / NestJS và mấy pattern kiến trúc
+                như CQRS, DDD. Không phải vì chúng “hot”, mà vì muốn hiểu cách hệ
+                thống lớn hơn mình được cấu trúc thế nào. DevOps, CI/CD, và tự động
+                hoá mấy việc lặp lại cũng là thứ mình nghiền.
               </p>
             </div>
 

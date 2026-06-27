@@ -181,6 +181,22 @@
     background-attachment: fixed;
     background-color: var(--background);
   }
+
+  /* Hide native cursor on devices that support fine pointers (custom cursor takes over).
+     Coarse pointers (touch) keep native cursor for accessibility. */
+  @media (pointer: fine) {
+    body:not(.reduce-motion) {
+      cursor: none;
+    }
+    body:not(.reduce-motion) a,
+    body:not(.reduce-motion) button,
+    body:not(.reduce-motion) [role="button"],
+    body:not(.reduce-motion) input,
+    body:not(.reduce-motion) textarea,
+    body:not(.reduce-motion) label {
+      cursor: none;
+    }
+  }
   ::selection {
     @apply bg-primary/25 text-foreground;
   }
