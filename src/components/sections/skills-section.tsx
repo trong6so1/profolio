@@ -23,10 +23,10 @@ import {
 import {
   staggerContainer,
   cardReveal,
-  fadeUp,
   EASE_PREMIUM,
   VIEWPORT_ONCE,
 } from "@/lib/animations";
+import { TechBubbleCloud } from "@/components/sections/tech-bubble-cloud";
 
 const iconMap: Record<string, LucideIcon> = {
   Server,
@@ -68,65 +68,8 @@ export function SkillsSection() {
           })}
         </motion.div>
 
-        {/* Marquee tech tags strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VIEWPORT_ONCE}
-          transition={{ duration: 0.6, delay: 0.3, ease: EASE_PREMIUM }}
-          className="relative mt-8 overflow-hidden rounded-2xl border border-border/60 bg-background/60 py-5 backdrop-blur"
-        >
-          {/* edge fade masks */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
-
-          <div className="flex items-center gap-3">
-            <span className="z-20 ml-5 hidden shrink-0 text-xs font-medium uppercase tracking-wider text-muted-foreground sm:inline-block">
-              Cũng quen thuộc:
-            </span>
-            <div className="marquee-track gap-2">
-              {[
-                "PHP",
-                "JavaScript",
-                "Vue.js",
-                "jQuery",
-                "Bash",
-                "CentOS",
-                "MariaDB",
-                "REST API",
-                "JSON",
-                "TSV",
-                "Git",
-                "Google API",
-                "MoMo API",
-              ]
-                .concat([
-                  "PHP",
-                  "JavaScript",
-                  "Vue.js",
-                  "jQuery",
-                  "Bash",
-                  "CentOS",
-                  "MariaDB",
-                  "REST API",
-                  "JSON",
-                  "TSV",
-                  "Git",
-                  "Google API",
-                  "MoMo API",
-                ])
-                .map((tag, i) => (
-                  <span
-                    key={`${tag}-${i}`}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-secondary/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    {tag}
-                  </span>
-                ))}
-            </div>
-          </div>
-        </motion.div>
+        {/* Interactive tech bubble cloud */}
+        <TechBubbleCloud />
       </div>
     </section>
   );

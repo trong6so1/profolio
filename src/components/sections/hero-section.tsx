@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
-  ArrowDown,
   Download,
   Mail,
   MapPin,
@@ -217,29 +216,6 @@ export function HeroSection() {
               <AvatarCard />
             </div>
           </motion.div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.6 }}
-          className="mt-12 flex justify-center lg:mt-16"
-        >
-          <a
-            href="#about"
-            aria-label="Cuộn xuống"
-            className="group flex flex-col items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Cuộn xuống
-            <motion.span
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background/60"
-            >
-              <ArrowDown className="h-3.5 w-3.5" />
-            </motion.span>
-          </a>
         </motion.div>
       </div>
     </section>
