@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { EASE_PREMIUM } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
 type Status =
@@ -132,7 +133,7 @@ export function ContactSection() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: EASE_PREMIUM }}
             className="space-y-4"
           >
             <Card className="spotlight-card relative overflow-hidden border-border/60 bg-card/60 backdrop-blur">
@@ -229,7 +230,7 @@ export function ContactSection() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, delay: 0.1, ease: EASE_PREMIUM }}
           >
             <Card className="spotlight-card border-conic relative overflow-hidden border-border/60 bg-card/60 backdrop-blur">
               <span className="absolute inset-x-0 top-0 h-px gradient-bar opacity-60" />
@@ -289,7 +290,7 @@ export function ContactSection() {
                         initial={{ opacity: 0, y: -8, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.3, ease: EASE_PREMIUM }}
                         role="status"
                         className="flex items-start gap-3 rounded-xl border border-success/30 bg-success/10 p-3.5 text-sm text-success"
                       >

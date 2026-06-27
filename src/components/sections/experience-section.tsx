@@ -7,6 +7,7 @@ import { experiences } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { EASE_PREMIUM, SPRING_SOFT } from "@/lib/animations";
 
 const typeStyles: Record<string, string> = {
   "Full-time":
@@ -75,19 +76,19 @@ function TimelineItem({ exp, index }: { exp: Exp; index: number }) {
 
   return (
     <motion.li
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, ease: EASE_PREMIUM }}
       className="relative pl-14 md:grid md:grid-cols-2 md:items-center md:gap-12 md:pl-0"
     >
-      {/* Node dot — pops in when scrolled to */}
+      {/* Node dot — pops in with spring when scrolled to */}
       <motion.span
         aria-hidden
         initial={{ scale: 0, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
+        transition={{ ...SPRING_SOFT, delay: 0.15 }}
         className="absolute left-5 top-6 z-10 -translate-x-1/2 md:left-1/2 md:top-1/2 md:-translate-y-1/2"
       >
         <span className="relative flex h-4 w-4 items-center justify-center">
@@ -131,7 +132,7 @@ function TimelineItem({ exp, index }: { exp: Exp; index: number }) {
             </div>
 
             {/* Role + company */}
-            <h3 className="mt-3 font-display text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
+            <h3 className="mt-3 font-display text-lg font-semibold text-foreground transition-colors duration-300 ease-premium group-hover:text-primary">
               {exp.role}
             </h3>
             <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -152,7 +153,7 @@ function TimelineItem({ exp, index }: { exp: Exp; index: number }) {
                   initial={{ opacity: 0, x: -8 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.2 + ai * 0.05, duration: 0.4 }}
+                  transition={{ delay: 0.2 + ai * 0.06, duration: 0.5, ease: EASE_PREMIUM }}
                   className="flex items-start gap-2 text-sm text-muted-foreground"
                 >
                   <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />

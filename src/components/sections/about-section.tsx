@@ -13,6 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import { profile, education, stats } from "@/lib/data";
+import { EASE_PREMIUM } from "@/lib/animations";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -79,7 +80,7 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, ease: EASE_PREMIUM }}
             className="space-y-6"
           >
             <div className="space-y-4 text-base leading-relaxed text-muted-foreground">
@@ -167,7 +168,7 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.6, delay: 0.15, ease: EASE_PREMIUM }}
             className="space-y-5"
           >
             <h3 className="flex items-center gap-2 font-display text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -185,8 +186,8 @@ export function AboutSection() {
                     viewport={{ once: true, margin: "-60px" }}
                     transition={{
                       duration: 0.5,
-                      delay: i * 0.08,
-                      ease: [0.22, 1, 0.36, 1],
+                      delay: i * 0.1,
+                      ease: EASE_PREMIUM,
                     }}
                     whileHover={{ y: -3 }}
                     className="spotlight-card border-conic lift-on-hover group relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur hover:border-primary/40 hover:shadow-depth"
@@ -225,8 +226,8 @@ export function AboutSection() {
                     viewport={{ once: true, margin: "-60px" }}
                     transition={{
                       duration: 0.5,
-                      delay: i * 0.08,
-                      ease: [0.22, 1, 0.36, 1],
+                      delay: i * 0.1,
+                      ease: EASE_PREMIUM,
                     }}
                     className="spotlight-card group relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/5 via-background/40 to-transparent p-4 transition-colors hover:border-primary/40"
                   >

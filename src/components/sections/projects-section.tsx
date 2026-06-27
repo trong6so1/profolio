@@ -7,7 +7,14 @@ import { projects, type Project } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useTilt } from "@/hooks/use-pointer";
+import { useCardTilt } from "@/hooks/use-card-tilt";
+import {
+  staggerContainer,
+  cardReveal,
+  fadeUp,
+  EASE_PREMIUM,
+  VIEWPORT_ONCE,
+} from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
 export function ProjectsSection() {
@@ -28,23 +35,41 @@ export function ProjectsSection() {
         />
 
         {/* Featured projects */}
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
-          {featured.map((project, i) => (
-            <FeaturedProjectCard key={project.id} project={project} index={i} />
+        <motion.div
+          variants={staggerContainer(0.15)}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="perspective-far mt-12 grid gap-6 lg:grid-cols-2"
+        >
+          {featured.map((project) => (
+            <FeaturedProjectCard key={project.id} project={project} />
           ))}
-        </div>
+        </motion.div>
 
         {/* Other projects */}
         {others.length > 0 && (
           <>
-            <h3 className="mt-16 font-display text-lg font-semibold text-foreground">
+            <motion.h3
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={VIEWPORT_ONCE}
+              className="mt-16 font-display text-lg font-semibold text-foreground"
+            >
               Dự án khác
-            </h3>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              {others.map((project, i) => (
-                <CompactProjectCard key={project.id} project={project} index={i} />
+            </motion.h3>
+            <motion.div
+              variants={staggerContainer(0.1)}
+              initial="hidden"
+              whileInView="show"
+              viewport={VIEWPORT_ONCE}
+              className="perspective-far mt-5 grid gap-4 sm:grid-cols-2"
+            >
+              {others.map((project) => (
+                <CompactProjectCard key={project.id} project={project} />
               ))}
-            </div>
+            </motion.div>
           </>
         )}
       </div>
@@ -52,38 +77,22 @@ export function ProjectsSection() {
   );
 }
 
-function FeaturedProjectCard({
-  project,
-  index,
-}: {
-  project: Project;
-  index: number;
-}) {
-  const tilt = useTilt<HTMLDivElement>(6);
+function FeaturedProjectCard({ project }: { project: Project }) {
+  const tilt = useCardTilt({ max: 5, scale: 1.02 });
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{
-        duration: 0.55,
-        delay: index * 0.1,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className="group relative"
-    >
+    <motion.article variants={cardReveal} className="group relative [transform-style:preserve-3d]">
       <Card
         onPointerMove={tilt.onMove}
         onPointerLeave={tilt.onLeave}
-        className="tilt-3d spotlight-card border-conic h-full gap-0 overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
+        className="tilt-card glow-border glow-inner h-full gap-0 overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-colors duration-300 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
         style={{ transform: "perspective(1000px)" }}
       >
         {/* Cover */}
         <div className="relative aspect-[16/9] overflow-hidden">
           <div
             className={cn(
-              "absolute inset-0 bg-gradient-to-br transition-transform duration-700 group-hover:scale-105",
+              "absolute inset-0 bg-gradient-to-br transition-transform duration-700 ease-premium group-hover:scale-105",
               project.gradient,
             )}
           />
@@ -94,11 +103,11 @@ function FeaturedProjectCard({
 
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.span
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
+              initial={{ scale: 0.8, opacity: 0, y: 8 }}
+              whileInView={{ scale: 1, opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.15 + index * 0.1 }}
-              className="text-6xl drop-shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6"
+              transition={{ duration: 0.7, delay: 0.2, ease: EASE_PREMIUM }}
+              className="text-6xl drop-shadow-lg transition-transform duration-500 ease-premium group-hover:scale-110 group-hover:-rotate-6"
               style={{ transform: "translateZ(40px)" }}
             >
               {project.emoji}
@@ -216,44 +225,36 @@ function FeaturedProjectCard({
   );
 }
 
-function CompactProjectCard({
-  project,
-  index,
-}: {
-  project: Project;
-  index: number;
-}) {
+function CompactProjectCard({ project }: { project: Project }) {
+  const tilt = useCardTilt({ max: 4, scale: 1.02 });
+
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{
-        duration: 0.5,
-        delay: index * 0.08,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-    >
-      <Card className="spotlight-card border-conic group relative h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
+    <motion.article variants={cardReveal} className="[transform-style:preserve-3d]">
+      <Card
+        onPointerMove={tilt.onMove}
+        onPointerLeave={tilt.onLeave}
+        className="tilt-card glow-border glow-inner group relative h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-colors duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+        style={{ transform: "perspective(1000px)" }}
+      >
         <CardContent className="relative z-10 flex h-full flex-col gap-3 p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <span
                 className={cn(
-                  "inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br text-xl transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6",
+                  "inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br text-xl transition-transform duration-500 ease-premium group-hover:scale-110 group-hover:-rotate-6",
                   project.gradient,
                 )}
               >
                 {project.emoji}
               </span>
               <div>
-                <h4 className="font-display text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+                <h4 className="font-display text-sm font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
                   {project.title}
                 </h4>
                 <p className="text-xs text-muted-foreground">{project.year}</p>
               </div>
             </div>
-            <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
+            <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-all duration-300 ease-premium group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
           </div>
 
           <p className="text-sm leading-relaxed text-muted-foreground">
@@ -265,7 +266,7 @@ function CompactProjectCard({
               <Badge
                 key={t}
                 variant="secondary"
-                className="bg-secondary/70 text-[10px] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                className="bg-secondary/70 text-[10px] font-medium text-muted-foreground transition-colors duration-300 hover:border-primary/40 hover:text-foreground"
               >
                 {t}
               </Badge>

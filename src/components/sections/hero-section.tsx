@@ -19,42 +19,34 @@ import { Magnetic } from "@/components/shared/magnetic";
 import { Particles } from "@/components/shared/particles";
 import { useMousePosition } from "@/hooks/use-mouse-position";
 import { useCountUp } from "@/hooks/use-count-up";
+import { EASE_PREMIUM, staggerContainer, fadeUp, blurIn } from "@/lib/animations";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
+const container = staggerContainer(0.1, 0.15);
 
 export function HeroSection() {
   const reduceMotion = useReducedMotion();
   const [roleIdx, setRoleIdx] = React.useState(0);
   const mouse = useMousePosition();
 
-  // Parallax motion values for avatar card
-  const mx = useSpring(mouse.x, { stiffness: 80, damping: 20 });
-  const my = useSpring(mouse.y, { stiffness: 80, damping: 20 });
-  const cardX = useTransform(mx, (v) => v * -12);
-  const cardY = useTransform(my, (v) => v * -12);
-  const blob1X = useTransform(mx, (v) => v * 30);
-  const blob1Y = useTransform(my, (v) => v * 30);
+  // Parallax motion values — softer spring for premium feel
+  const mx = useSpring(mouse.x, { stiffness: 60, damping: 22, mass: 0.8 });
+  const my = useSpring(mouse.y, { stiffness: 60, damping: 22, mass: 0.8 });
+  const cardX = useTransform(mx, (v) => v * -14);
+  const cardY = useTransform(my, (v) => v * -14);
+  const blob1X = useTransform(mx, (v) => v * 40);
+  const blob1Y = useTransform(my, (v) => v * 40);
+  const blob2X = useTransform(mx, (v) => v * -25);
+  const blob2Y = useTransform(my, (v) => v * -25);
+
+  // Cursor halo position — follows mouse directly (no spring) for responsiveness
+  const haloX = useSpring(mouse.x * 60, { stiffness: 120, damping: 20 });
+  const haloY = useSpring(mouse.y * 60, { stiffness: 120, damping: 20 });
 
   React.useEffect(() => {
     if (reduceMotion) return;
     const id = setInterval(() => {
       setRoleIdx((v) => (v + 1) % profile.roles.length);
-    }, 2800);
+    }, 3000);
     return () => clearInterval(id);
   }, [reduceMotion]);
 
@@ -78,15 +70,22 @@ export function HeroSection() {
           style={{ x: blob1X, y: blob1Y }}
           className="blob absolute -top-32 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-primary/15"
         />
-        <div
+        <motion.div
+          style={{ x: blob2X, y: blob2Y }}
           className="blob absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[oklch(0.72_0.18_290)]/10"
-          style={{ animationDelay: "-6s" }}
         />
         <div
           className="blob absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-[oklch(0.72_0.15_155)]/10"
           style={{ animationDelay: "-12s" }}
         />
       </div>
+
+      {/* Cursor halo — soft radial glow following cursor */}
+      <motion.div
+        aria-hidden
+        style={{ x: haloX, y: haloY }}
+        className="pointer-events-none absolute left-1/2 top-1/2 z-0 hidden h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_color-mix(in_oklch,_var(--primary)_8%,_transparent),_transparent_60%)] md:block"
+      />
 
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -97,7 +96,7 @@ export function HeroSection() {
         >
           {/* Left: text content */}
           <div className="flex flex-col items-start gap-6">
-            <motion.div variants={item}>
+            <motion.div variants={fadeUp}>
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3.5 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
@@ -110,22 +109,25 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <motion.div variants={item} className="space-y-3">
+            <motion.div variants={fadeUp} className="space-y-3">
               <p className="font-display text-sm font-medium uppercase tracking-[0.18em] text-primary">
                 <span className="inline-block h-px w-6 align-middle bg-primary/60" />{" "}
                 Xin chào, tôi là
               </p>
-              <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              <motion.h1
+                variants={blurIn}
+                className="name-shimmer font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl"
+              >
                 {profile.name}
-              </h1>
+              </motion.h1>
               <div className="flex min-h-[2.5rem] items-center overflow-hidden text-2xl font-semibold sm:text-3xl">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={roleIdx}
-                    initial={{ y: 28, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -28, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    initial={{ y: 32, opacity: 0, filter: "blur(8px)" }}
+                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                    exit={{ y: -32, opacity: 0, filter: "blur(8px)" }}
+                    transition={{ duration: 0.5, ease: EASE_PREMIUM }}
                     className="text-gradient inline-flex items-center"
                   >
                     {profile.roles[roleIdx]}
@@ -135,13 +137,13 @@ export function HeroSection() {
             </motion.div>
 
             <motion.p
-              variants={item}
+              variants={fadeUp}
               className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
             >
               {profile.tagline}
             </motion.p>
 
-            <motion.div variants={item} className="flex flex-wrap items-center gap-3">
+            <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3">
               <Magnetic strength={0.25} className="inline-block">
                 <Button
                   asChild
@@ -196,7 +198,7 @@ export function HeroSection() {
 
             {/* Stats */}
             <motion.div
-              variants={item}
+              variants={fadeUp}
               className="mt-6 grid w-full max-w-xl grid-cols-2 gap-3 sm:grid-cols-4"
             >
               {stats.map((s, i) => (
@@ -207,7 +209,7 @@ export function HeroSection() {
 
           {/* Right: avatar / portrait card */}
           <motion.div
-            variants={item}
+            variants={fadeUp}
             style={{ x: cardX, y: cardY }}
             className="relative mx-auto w-full max-w-sm"
           >

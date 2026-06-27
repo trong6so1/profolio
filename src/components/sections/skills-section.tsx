@@ -13,12 +13,20 @@ import { skillGroups } from "@/lib/data";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCountUp } from "@/hooks/use-count-up";
+import { useCardTilt } from "@/hooks/use-card-tilt";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  staggerContainer,
+  cardReveal,
+  fadeUp,
+  EASE_PREMIUM,
+  VIEWPORT_ONCE,
+} from "@/lib/animations";
 
 const iconMap: Record<string, LucideIcon> = {
   Server,
@@ -45,55 +53,27 @@ export function SkillsSection() {
           description="Bộ công cụ được tinh chỉnh qua các dự án thực tế — từ xây dựng API cho đến vận hành production."
         />
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {skillGroups.map((group, gi) => {
+        <motion.div
+          variants={staggerContainer(0.12)}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="perspective-far mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {skillGroups.map((group) => {
             const Icon = iconMap[group.icon] ?? Server;
             return (
-              <motion.div
-                key={group.category}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{
-                  duration: 0.5,
-                  delay: gi * 0.08,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                <Card className="spotlight-card border-conic lift-on-hover group h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur hover:border-primary/40 hover:shadow-depth">
-                  <CardContent className="relative z-10 p-5">
-                    <div className="flex items-center justify-between gap-3 border-b border-border/60 pb-4">
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
-                          <Icon className="h-5 w-5" />
-                        </span>
-                        <h3 className="font-display text-base font-semibold text-foreground transition-colors group-hover:text-primary">
-                          {group.category}
-                        </h3>
-                      </div>
-                      <span className="text-xs font-medium text-muted-foreground/70">
-                        {group.skills.length} skills
-                      </span>
-                    </div>
-
-                    <ul className="mt-5 space-y-4">
-                      {group.skills.map((skill, si) => (
-                        <SkillRow key={skill.name} skill={skill} delay={si * 0.1} />
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <SkillCard key={group.category} group={group} Icon={Icon} />
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Marquee tech tags strip */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          viewport={VIEWPORT_ONCE}
+          transition={{ duration: 0.6, delay: 0.3, ease: EASE_PREMIUM }}
           className="relative mt-8 overflow-hidden rounded-2xl border border-border/60 bg-background/60 py-5 backdrop-blur"
         >
           {/* edge fade masks */}
@@ -152,6 +132,51 @@ export function SkillsSection() {
   );
 }
 
+type SkillGroup = (typeof skillGroups)[number];
+
+function SkillCard({
+  group,
+  Icon,
+}: {
+  group: SkillGroup;
+  Icon: LucideIcon;
+}) {
+  const tilt = useCardTilt({ max: 6, scale: 1.03 });
+
+  return (
+    <motion.div variants={cardReveal} className="[transform-style:preserve-3d]">
+      <Card
+        onPointerMove={tilt.onMove}
+        onPointerLeave={tilt.onLeave}
+        className="tilt-card glow-border glow-inner group relative h-full overflow-hidden border-border/60 bg-card/60 backdrop-blur transition-colors duration-300 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
+        style={{ transform: "perspective(1000px)" }}
+      >
+        <CardContent className="relative z-10 p-5">
+          <div className="flex items-center justify-between gap-3 border-b border-border/60 pb-4">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary shadow-sm shadow-primary/20 transition-transform duration-500 ease-premium group-hover:scale-110 group-hover:-rotate-6">
+                <Icon className="h-5 w-5" />
+              </span>
+              <h3 className="font-display text-base font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
+                {group.category}
+              </h3>
+            </div>
+            <span className="text-xs font-medium text-muted-foreground/70">
+              {group.skills.length} skills
+            </span>
+          </div>
+
+          <ul className="mt-5 space-y-4">
+            {group.skills.map((skill, si) => (
+              <SkillRow key={skill.name} skill={skill} delay={si * 0.1} />
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
 type Skill = (typeof skillGroups)[number]["skills"][number];
 
 function SkillRow({ skill, delay }: { skill: Skill; delay: number }) {
@@ -195,9 +220,9 @@ function SkillRow({ skill, delay }: { skill: Skill; delay: number }) {
           whileInView={{ width: `${skill.level}%` }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{
-            duration: 1,
+            duration: 1.1,
             delay: 0.2 + delay,
-            ease: [0.22, 1, 0.36, 1],
+            ease: EASE_PREMIUM,
           }}
           className="relative h-full rounded-full bg-gradient-to-r from-primary to-[oklch(0.72_0.18_290)]"
         >
