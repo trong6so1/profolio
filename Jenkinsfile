@@ -97,17 +97,46 @@ pipeline {
                   )
               ]) {
                   sh '''
-                      echo "Deploying..."
+                      set -eux
 
-                      NGROK_AUTHTOKEN="$NGROK_AUTHTOKEN" \
+                      echo "======================================"
+                      echo "🐳 DOCKER DEPLOY"
+                      echo "======================================"
+
+                      echo "Docker:"
+                      docker --version
+
+                      echo "Docker containers:"
+                      docker ps -a
+
+                      echo "Docker images:"
+                      docker images
+
+                      echo "Compose config:"
+                      docker compose \
+                          -f docker-compose.app.yml \
+                          config
+
+                      echo "Stopping old containers..."
+                      docker compose \
+                          -f docker-compose.app.yml \
+                          down || true
+
+                      echo "Starting application..."
                       docker compose \
                           -f docker-compose.app.yml \
                           up -d \
                           --force-recreate
+
+                      echo "======================================"
+                      echo "🐳 CONTAINERS AFTER DEPLOY"
+                      echo "======================================"
+
+                      docker ps -a
                   '''
               }
           }
-        }
+      }
 
 
         stage('Health Check') {
