@@ -140,20 +140,39 @@ pipeline {
 
 
         stage('Health Check') {
-            steps {
-                sh '''
-                    echo "======================================"
-                    echo "❤️ HEALTH CHECK"
-                    echo "======================================"
+          steps {
+              sh '''
+                  set -e
 
-                    sleep 5
+                  echo "======================================"
+                  echo "❤️ HEALTH CHECK"
+                  echo "======================================"
 
-                    docker ps
+                  sleep 5
 
-                    curl -f http://localhost:81
-                '''
-            }
-        }
+                  echo "===== CONTAINERS ====="
+                  docker ps
+
+                  echo ""
+                  echo "===== APP STATUS ====="
+
+                  docker inspect \
+                      --format='{{.State.Status}}' \
+                      profolio-app
+
+                  echo ""
+                  echo "===== APP HEALTH CHECK ====="
+
+                  docker exec profolio-app \
+                      node -e "fetch('http://127.0.0.1:81').then(r => { console.log('HTTP status:', r.status); if (!r.ok) process.exit(1) }).catch(err => { console.error(err); process.exit(1) })"
+
+                  echo ""
+                  echo "======================================"
+                  echo "✅ APP HEALTH CHECK PASSED"
+                  echo "======================================"
+              '''
+          }
+      }
     }
 
 
