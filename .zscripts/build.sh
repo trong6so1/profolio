@@ -1,122 +1,280 @@
 #!/bin/bash
 
-# 将 stderr 重定向到 stdout，避免 execute_command 因为 stderr 输出而报错
-exec 2>&1
+set -euo pipefail
 
-set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# 获取脚本所在目录（.zscripts 目录，即 workspace-agent/.zscripts）
-# 使用 $0 获取脚本路径（兼容 sh 和 bash）
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+BUILD_ID="${BUILD_ID:-local}"
 
-# Next.js 项目路径
-NEXTJS_PROJECT_DIR="/home/z/my-project"
+BUILD_DIR="/tmp/build_fullstack_${BUILD_ID}"
+PACKAGE_FILE="${BUILD_DIR}.tar.gz"
 
-# 检查 Next.js 项目目录是否存在
-if [ ! -d "$NEXTJS_PROJECT_DIR" ]; then
-    echo "❌ 错误: Next.js 项目目录不存在: $NEXTJS_PROJECT_DIR"
-    exit 1
-fi
-
-echo "🚀 开始构建 Next.js 应用和 mini-services..."
-echo "📁 Next.js 项目路径: $NEXTJS_PROJECT_DIR"
-
-# 切换到 Next.js 项目目录
-cd "$NEXTJS_PROJECT_DIR" || exit 1
-
-# 设置环境变量
 export NEXT_TELEMETRY_DISABLED=1
 
-BUILD_DIR="/tmp/build_fullstack_$BUILD_ID"
-echo "📁 清理并创建构建目录: $BUILD_DIR"
-mkdir -p "$BUILD_DIR"
+echo "=========================================="
+echo "🚀 START BUILD"
+echo "=========================================="
+echo "PROJECT_DIR: $PROJECT_DIR"
+echo "BUILD_ID   : $BUILD_ID"
+echo "BUILD_DIR  : $BUILD_DIR"
+echo "PACKAGE    : $PACKAGE_FILE"
+echo "=========================================="
 
-# 安装依赖
-echo "📦 安装依赖..."
-bun install
+cd "$PROJECT_DIR"
 
-# 构建 Next.js 应用
-echo "🔨 构建 Next.js 应用..."
-bun run build
+# ============================================================
+# Check Bun
+# ============================================================
 
-# 构建 mini-services
-# 检查 Next.js 项目目录下是否有 mini-services 目录
-if [ -d "$NEXTJS_PROJECT_DIR/mini-services" ]; then
-    echo "🔨 构建 mini-services..."
-    # 使用 workspace-agent 目录下的 mini-services 脚本
-    sh "$SCRIPT_DIR/mini-services-install.sh"
-    sh "$SCRIPT_DIR/mini-services-build.sh"
-
-    # 复制 mini-services-start.sh 到 mini-services-dist 目录
-    echo "  - 复制 mini-services-start.sh 到 $BUILD_DIR"
-    cp "$SCRIPT_DIR/mini-services-start.sh" "$BUILD_DIR/mini-services-start.sh"
-    chmod +x "$BUILD_DIR/mini-services-start.sh"
-else
-    echo "ℹ️  mini-services 目录不存在，跳过"
-fi
-
-# 将所有构建产物复制到临时构建目录
-echo "📦 收集构建产物到 $BUILD_DIR..."
-
-# 复制 Next.js standalone 构建输出
-if [ -d ".next/standalone" ]; then
-    echo "  - 复制 .next/standalone"
-    cp -r .next/standalone "$BUILD_DIR/next-service-dist/"
-fi
-
-# 复制 Next.js 静态文件
-if [ -d ".next/static" ]; then
-    echo "  - 复制 .next/static"
-    mkdir -p "$BUILD_DIR/next-service-dist/.next"
-    cp -r .next/static "$BUILD_DIR/next-service-dist/.next/"
-fi
-
-# 复制 public 目录
-if [ -d "public" ]; then
-    echo "  - 复制 public"
-    cp -r public "$BUILD_DIR/next-service-dist/"
-fi
-
-# 将测试环境数据库复制到构建产物中，生产环境直接使用这份数据库
-if [ -f "./db/custom.db" ]; then
-    echo "🗄️  复制测试环境数据库到构建产物..."
-    mkdir -p "$BUILD_DIR/db"
-    cp -r ./db/. "$BUILD_DIR/db/"
-
-    echo "🗄️  同步构建产物中的数据库结构..."
-    DATABASE_URL="file:$BUILD_DIR/db/custom.db" bun run db:push
-    echo "✅ 构建产物数据库已准备完成"
-    ls -lah "$BUILD_DIR/db"
-else
-    echo "❌ 未找到测试环境数据库文件 ./db/custom.db，无法继续构建生产包"
+if ! command -v bun >/dev/null 2>&1; then
+    echo "❌ bun is not installed or not in PATH"
+    echo ""
+    echo "Install Bun:"
+    echo "curl -fsSL https://bun.sh/install | bash"
     exit 1
 fi
 
-# 复制 Caddyfile（如果存在）
-if [ -f "Caddyfile" ]; then
-    echo "  - 复制 Caddyfile"
-    cp Caddyfile "$BUILD_DIR/"
-else
-    echo "ℹ️  Caddyfile 不存在，跳过"
+echo "✅ Bun: $(bun --version)"
+
+# ============================================================
+# Check package.json
+# ============================================================
+
+if [ ! -f "$PROJECT_DIR/package.json" ]; then
+    echo "❌ package.json not found"
+    exit 1
 fi
 
-# 复制 start.sh 脚本
-echo "  - 复制 start.sh 到 $BUILD_DIR"
-cp "$SCRIPT_DIR/start.sh" "$BUILD_DIR/start.sh"
+# ============================================================
+# Clean
+# ============================================================
+
+echo ""
+echo "🧹 Cleaning old build..."
+
+rm -rf "$BUILD_DIR"
+rm -f "$PACKAGE_FILE"
+
+mkdir -p "$BUILD_DIR"
+
+# ============================================================
+# Install dependencies
+# ============================================================
+
+echo ""
+echo "=========================================="
+echo "📦 Installing dependencies"
+echo "=========================================="
+
+if [ -f "$PROJECT_DIR/bun.lock" ]; then
+
+    echo "Using bun.lock..."
+
+    bun install --frozen-lockfile
+
+elif [ -f "$PROJECT_DIR/bun.lockb" ]; then
+
+    echo "Using bun.lockb..."
+
+    bun install --frozen-lockfile
+
+else
+
+    echo "⚠️ Bun lock file not found"
+    echo "Running bun install..."
+
+    bun install
+
+fi
+
+# ============================================================
+# Build Next.js
+# ============================================================
+
+echo ""
+echo "=========================================="
+echo "🔨 Building Next.js"
+echo "=========================================="
+
+bun run build
+
+# ============================================================
+# Check standalone
+# ============================================================
+
+if [ ! -f "$PROJECT_DIR/.next/standalone/server.js" ]; then
+
+    echo "❌ Next.js standalone server.js not found"
+
+    echo ""
+    echo "Check next.config.js / next.config.ts:"
+    echo ""
+    echo "output: 'standalone'"
+    echo ""
+
+    exit 1
+fi
+
+# ============================================================
+# Copy Next.js standalone
+# ============================================================
+
+echo ""
+echo "📦 Copying Next.js standalone..."
+
+mkdir -p "$BUILD_DIR/next-service-dist"
+
+cp -R \
+    "$PROJECT_DIR/.next/standalone/." \
+    "$BUILD_DIR/next-service-dist/"
+
+# ============================================================
+# Copy static
+# ============================================================
+
+if [ -d "$PROJECT_DIR/.next/static" ]; then
+
+    echo "📦 Copying .next/static..."
+
+    mkdir -p "$BUILD_DIR/next-service-dist/.next"
+
+    cp -R \
+        "$PROJECT_DIR/.next/static" \
+        "$BUILD_DIR/next-service-dist/.next/"
+
+fi
+
+# ============================================================
+# Copy public
+# ============================================================
+
+if [ -d "$PROJECT_DIR/public" ]; then
+
+    echo "📦 Copying public..."
+
+    cp -R \
+        "$PROJECT_DIR/public" \
+        "$BUILD_DIR/next-service-dist/"
+
+fi
+
+# ============================================================
+# Database
+# ============================================================
+
+if [ -f "$PROJECT_DIR/db/custom.db" ]; then
+
+    echo ""
+    echo "🗄️ Copying database..."
+
+    mkdir -p "$BUILD_DIR/db"
+
+    cp -R \
+        "$PROJECT_DIR/db/." \
+        "$BUILD_DIR/db/"
+
+    echo "🗄️ Updating database schema..."
+
+    DATABASE_URL="file:$BUILD_DIR/db/custom.db" \
+        bun run db:push
+
+else
+
+    echo "⚠️ db/custom.db not found"
+
+fi
+
+# ============================================================
+# Caddyfile
+# ============================================================
+
+if [ -f "$PROJECT_DIR/Caddyfile" ]; then
+
+    echo ""
+    echo "📦 Copying Caddyfile..."
+
+    cp \
+        "$PROJECT_DIR/Caddyfile" \
+        "$BUILD_DIR/Caddyfile"
+
+else
+
+    echo "⚠️ Caddyfile not found"
+
+fi
+
+# ============================================================
+# Start script
+# ============================================================
+
+echo ""
+echo "📦 Copying start.sh..."
+
+cp \
+    "$SCRIPT_DIR/start.sh" \
+    "$BUILD_DIR/start.sh"
+
 chmod +x "$BUILD_DIR/start.sh"
 
-# 打包到 $BUILD_DIR.tar.gz
-PACKAGE_FILE="${BUILD_DIR}.tar.gz"
-echo ""
-echo "📦 打包构建产物到 $PACKAGE_FILE..."
-cd "$BUILD_DIR" || exit 1
-tar -czf "$PACKAGE_FILE" .
-cd - > /dev/null || exit 1
+# ============================================================
+# mini-services
+# ============================================================
 
-# # 清理临时目录
-# rm -rf "$BUILD_DIR"
+if [ -d "$PROJECT_DIR/mini-services" ]; then
+
+    echo ""
+    echo "=========================================="
+    echo "🔨 Building mini-services"
+    echo "=========================================="
+
+    if [ -f "$SCRIPT_DIR/mini-services-install.sh" ]; then
+        bash "$SCRIPT_DIR/mini-services-install.sh"
+    fi
+
+    if [ -f "$SCRIPT_DIR/mini-services-build.sh" ]; then
+        bash "$SCRIPT_DIR/mini-services-build.sh"
+    fi
+
+    if [ -f "$SCRIPT_DIR/mini-services-start.sh" ]; then
+
+        cp \
+            "$SCRIPT_DIR/mini-services-start.sh" \
+            "$BUILD_DIR/mini-services-start.sh"
+
+        chmod +x "$BUILD_DIR/mini-services-start.sh"
+
+    fi
+
+else
+
+    echo "ℹ️ mini-services not found"
+
+fi
+
+# ============================================================
+# Package
+# ============================================================
 
 echo ""
-echo "✅ 构建完成！所有产物已打包到 $PACKAGE_FILE"
-echo "📊 打包文件大小:"
+echo "=========================================="
+echo "📦 Creating package"
+echo "=========================================="
+
+tar -czf \
+    "$PACKAGE_FILE" \
+    -C "$BUILD_DIR" \
+    .
+
+echo ""
+echo "=========================================="
+echo "✅ BUILD SUCCESS"
+echo "=========================================="
+
 ls -lh "$PACKAGE_FILE"
+
+echo ""
+echo "Artifact:"
+echo "$PACKAGE_FILE"
+
+echo "=========================================="

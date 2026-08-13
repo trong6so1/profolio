@@ -1,0 +1,37 @@
+services:
+
+  app:
+    image: profolio-app:latest
+    container_name: profolio-app
+    restart: unless-stopped
+    ports:
+      - "81:81"
+    networks:
+      - profolio-network
+
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: profolio-ngrok
+    restart: unless-stopped
+
+    depends_on:
+      - app
+
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+
+    command:
+      - "http"
+      - "app:81"
+
+    ports:
+      - "4040:4040"
+
+    networks:
+      - profolio-network
+
+
+networks:
+  profolio-network:
+    driver: bridge
