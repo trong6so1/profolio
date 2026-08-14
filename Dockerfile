@@ -41,13 +41,13 @@ ENV PATH=/root/.bun/bin:$PATH
 
 
 # ==========================================
-# Verify Bun
+# Verify tools
 # ==========================================
 
-RUN node --version
-RUN npm --version
-RUN bun --version
-RUN caddy version
+RUN node --version \
+    && npm --version \
+    && bun --version \
+    && caddy version
 
 
 # ==========================================
@@ -80,6 +80,13 @@ COPY . .
 
 
 # ==========================================
+# Copy Caddy configuration
+# ==========================================
+
+COPY Caddyfile /etc/caddy/Caddyfile
+
+
+# ==========================================
 # Next.js build
 # ==========================================
 
@@ -103,4 +110,4 @@ EXPOSE 81
 # Start Next.js + Caddy
 # ==========================================
 
-CMD ["sh", "-c", "node .next/standalone/server.js & exec caddy run --config /app/Caddyfile --adapter caddyfile"]
+CMD ["sh", "-c", "node .next/standalone/server.js & exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"]

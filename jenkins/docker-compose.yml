@@ -1,5 +1,4 @@
 services:
-
   jenkins:
     build:
       context: .
@@ -17,5 +16,19 @@ services:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
 
+    networks:
+      - jenkins-network
+      - profolio-network
+
+
 volumes:
   jenkins_home:
+
+
+networks:
+  jenkins-network:
+    driver: bridge
+
+  profolio-network:
+    external: true
+    name: profolio_profolio-network
