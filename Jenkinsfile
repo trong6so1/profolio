@@ -118,11 +118,13 @@ pipeline {
 
                       echo "Compose config:"
                       docker compose \
+                          -p profolio \
                           -f docker-compose.app.yml \
                           config
 
                       echo "Starting application..."
                       docker compose \
+                          -p profolio \
                           -f docker-compose.app.yml \
                           up -d \
                           --force-recreate
