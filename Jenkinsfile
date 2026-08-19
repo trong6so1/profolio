@@ -2,6 +2,10 @@ pipeline {
 
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     environment {
         PATH = "/opt/bun/bin:/usr/local/bin:/usr/bin:/bin:${env.PATH}"
         NEXT_TELEMETRY_DISABLED = "1"
@@ -116,11 +120,6 @@ pipeline {
                       docker compose \
                           -f docker-compose.app.yml \
                           config
-
-                      echo "Stopping old containers..."
-                      docker compose \
-                          -f docker-compose.app.yml \
-                          down || true
 
                       echo "Starting application..."
                       docker compose \

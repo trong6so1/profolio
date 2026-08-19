@@ -6,6 +6,8 @@ services:
 
     container_name: jenkins
 
+    user: root
+
     restart: unless-stopped
 
     ports:
@@ -31,4 +33,4 @@ networks:
 
   profolio-network:
     external: true
-    name: profolio_profolio-network
+    name: profolio-net

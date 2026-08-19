@@ -18,8 +18,8 @@ services:
     depends_on:
       - app
 
-    environment:
-      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    env_file:
+      - .env.ngrok
 
     command:
       - "http"
@@ -34,4 +34,5 @@ services:
 
 networks:
   profolio-network:
-    driver: bridge
+    external: true
+    name: profolio-net
