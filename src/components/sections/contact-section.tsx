@@ -140,7 +140,7 @@ export function ContactSection() {
               <span className="absolute inset-x-0 top-0 h-px gradient-bar opacity-60" />
               <CardContent className="relative z-10 p-6">
                 <h3 className="font-display text-lg font-semibold text-foreground">
-                  Thông tin liên hệ đến tôi
+                  Thông tin liên hệ
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Trực tuyến thường xuyên — phản hồi trong vòng 24 giờ.
