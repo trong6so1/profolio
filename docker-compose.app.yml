@@ -18,8 +18,8 @@ services:
     depends_on:
       - app
 
-    env_file:
-      - .env.ngrok
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
 
     command:
       - "http"
