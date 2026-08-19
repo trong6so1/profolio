@@ -8,6 +8,10 @@ services:
 
     user: root
 
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
     restart: unless-stopped
 
     ports:
