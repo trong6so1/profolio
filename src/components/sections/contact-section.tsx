@@ -142,9 +142,6 @@ export function ContactSection() {
                 <h3 className="font-display text-lg font-semibold text-foreground">
                   Thông tin liên hệ
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Trực tuyến thường xuyên — phản hồi trong vòng 24 giờ.
-                </p>
 
                 <ul className="mt-6 space-y-3">
                   {contactChannels.map((c) => {
